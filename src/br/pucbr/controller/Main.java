@@ -1,6 +1,14 @@
 package br.pucbr.controller;
 
+import br.pucbr.model.UsuarioMensal;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
+
+    static List<UsuarioMensal> usuarioMensalList = new ArrayList<>();
+    private static int ultimoIdUsuario = 2;
 
     public static void main(String[] args) {
         int opcao = 8;
@@ -12,11 +20,13 @@ public class Main {
 
             switch (opcao) {
                 case 1:
-                    cult.efetuarLogin();
-                    logado = true;
+                    mostrarMenuLogin();
                     break;
                 case 2:
-                    cult.cadastrarCliente();
+//                    cult.cadastrarCliente();
+                    break;
+                case 3:
+//                    cadastrarUsuario(
                     break;
 
                 case 8:
@@ -26,9 +36,12 @@ public class Main {
                 default:
                     System.out.println("Opcao invalida");
             }
-            Console.lerString("");
 
         } while (opcao != 8);
+    }
+
+    private static void efetuarLogin() {
+        mostrarMenu();
     }
 
     public static void mostrarMenu() {
@@ -37,6 +50,46 @@ public class Main {
         System.out.println("===========================================");
         System.out.println("1 - Entrar com login");
         System.out.println("2 - Entrar sem login");
+        System.out.println("3 - Cadastrar novo usuário");
         System.out.println("8 - Sair");
+    }
+
+    public static void mostrarMenuLogin() {
+        int opcao;
+        System.out.println("\n\n===========================================");
+        System.out.println("1 - Entrar com usuario");
+        System.out.println("2 - Cadastrar novo usuário");
+        System.out.println("8 - Sair");
+        opcao = Console.lerInt("Escolha uma opcao:");
+        switch (opcao) {
+            case 1:
+                efetuarLogin();
+                break;
+            case 2:
+                cadastrarUsuario();
+                break;
+            case 8:
+                System.out.println("Fim");
+                break;
+
+            default:
+                System.out.println("Opcao invalida");
+        }
+    }
+
+    private static void cadastrarUsuario() {
+        String nome = Console.lerString("Digite o nome do usuario: ");
+        String usuario = Console.lerString("Digite o usuario: ");
+        String senha = Console.lerString("Digite a senha do usuario: ");
+        UsuarioMensal usuarioMensal = new UsuarioMensal(ultimoIdUsuario, nome, usuario, senha);
+        ultimoIdUsuario++;
+        usuarioMensalList.add(usuarioMensal);
+        mostrarUsuariosMensais();
+    }
+
+    private static void mostrarUsuariosMensais() {
+        usuarioMensalList.forEach(usuarioMensal -> {
+            System.out.println(usuarioMensal.toString());
+        });
     }
 }
