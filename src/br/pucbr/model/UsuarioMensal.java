@@ -4,7 +4,14 @@ public class UsuarioMensal extends Usuario {
 
     private static Double desconto = 0.10;
 
-    public UsuarioMensal(int id, String nome, String usuario, String senha) {
-        super(id, nome, usuario, senha);
+
+
+
+    public static Double getDesconto() {
+        return desconto;
+    }
+
+    public UsuarioMensal(int id, String nome, String usuario, String senha, Credito credito) {
+        super(id, nome, usuario, senha, credito);
     }
 }
