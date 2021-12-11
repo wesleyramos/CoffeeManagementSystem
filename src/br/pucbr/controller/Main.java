@@ -5,8 +5,10 @@ import br.pucbr.model.Estoque;
 import br.pucbr.model.Historico;
 import br.pucbr.model.Item;
 import br.pucbr.model.Usuario;
+import br.pucbr.model.UsuarioAdmin;
 import br.pucbr.model.UsuarioMensal;
 import br.pucbr.utils.ListaVenda;
+import br.pucbr.utils.MenuAdmin;
 import br.pucbr.utils.MenuUsuarioMensal;
 
 import java.util.ArrayList;
@@ -15,7 +17,10 @@ import java.util.List;
 
 public class Main {
 
-    private static List<Usuario> usuarioList = Arrays.asList(new UsuarioMensal(2, "wesley", "wesley", "wesley", new Credito(0d)));
+    private static List<Usuario> usuarioList = Arrays.asList(
+            new UsuarioMensal(2, "wesley", "wesley", "wesley", new Credito(0d)),
+            new UsuarioAdmin(3, "admin", "admin", "admin", new Credito(0d))
+    );
     private static List<Item> itemList = Arrays.asList(new Item(1, "café extra forte", 4d, new Estoque(3, 1)));
     private static List<Historico> historicoSistema = new ArrayList<>();
     private static ListaVenda vendas = new ListaVenda();
@@ -48,39 +53,14 @@ public class Main {
                 }
 
             } else {
-                opcao = MenuUsuarioMensal.mostrar(usuarioLogado, itemList, historicoSistema, vendas);
-               /* do {
-                    MenuUsuarioMensal.mostrar();
-                    mostrarMenuUsuarioMensal();
-                    opcao = Console.lerInt("Escolha uma opcao:");
-                    System.out.println("\n\n");
-                    switch (opcao) {
-                        case 1:
-                            comprarProduto();
-                            break;
-//                        case 3:
-//                            cadastrarUsuario();
-//                            break;
-
-                        case 8:
-                            System.out.println("Fim");
-                            break;
-
-                        default:
-                            System.out.println("Opcao invalida");
-                    }
-
-                } while (opcao != 8);*/
+                if (usuarioLogado instanceof UsuarioMensal) {
+                    usuarioLogado = MenuUsuarioMensal.mostrar(usuarioLogado, itemList, historicoSistema, vendas);
+                } else if (usuarioLogado instanceof UsuarioAdmin) {
+                    usuarioLogado = MenuAdmin.mostrar(usuarioLogado, itemList, historicoSistema, vendas);
+                }
             }
         } while (opcao != 8);
-
     }
-
-
-    private static void mostrarItens() {
-
-    }
-
 
     private static Usuario efetuarLogin() {
         String usuario = Console.lerString("Digite o nome do usuario: ");

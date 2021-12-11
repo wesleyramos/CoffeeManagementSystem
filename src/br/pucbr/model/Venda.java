@@ -16,6 +16,16 @@ public class Venda {
         this.idItem = idItem;
     }
 
+    @Override
+    public String toString() {
+        return "Venda{" +
+                "id=" + id +
+                ", data=" + data +
+                ", total=" + total +
+                ", idItem=" + idItem +
+                '}';
+    }
+
     public int getId() {
         return id;
     }
