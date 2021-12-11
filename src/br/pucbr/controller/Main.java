@@ -1,23 +1,30 @@
 package br.pucbr.controller;
 
 import br.pucbr.model.Credito;
+import br.pucbr.model.Estoque;
+import br.pucbr.model.Historico;
 import br.pucbr.model.Item;
 import br.pucbr.model.Usuario;
 import br.pucbr.model.UsuarioMensal;
+import br.pucbr.utils.ListaVenda;
+import br.pucbr.utils.MenuUsuarioMensal;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Main {
 
     private static List<Usuario> usuarioList = Arrays.asList(new UsuarioMensal(2, "wesley", "wesley", "wesley", new Credito(0d)));
-    private static List<Item> itemList = Arrays.asList(new Item(1, "café extra forte", 4d));
+    private static List<Item> itemList = Arrays.asList(new Item(1, "café extra forte", 4d, new Estoque(3, 1)));
+    private static List<Historico> historicoSistema = new ArrayList<>();
+    private static ListaVenda vendas = new ListaVenda();
 
     private static int proximoIdUsuario = 3;
 
     private static Usuario usuarioLogado = null;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         int opcao = 8;
         do {
             if (null == usuarioLogado) {
@@ -27,7 +34,7 @@ public class Main {
                 switch (opcao) {
                     case 1:
                         usuarioLogado = efetuarLogin();
-                        if (usuarioLogado.equals(null)) {
+                        if (null == usuarioLogado) {
                             System.out.println("\n\n===========================================");
                             System.out.println("Verifique usuário e senha, dados incorretos!!!");
                         }
@@ -41,7 +48,9 @@ public class Main {
                 }
 
             } else {
-                do {
+                opcao = MenuUsuarioMensal.mostrar(usuarioLogado, itemList, historicoSistema, vendas);
+               /* do {
+                    MenuUsuarioMensal.mostrar();
                     mostrarMenuUsuarioMensal();
                     opcao = Console.lerInt("Escolha uma opcao:");
                     System.out.println("\n\n");
@@ -49,9 +58,9 @@ public class Main {
                         case 1:
                             comprarProduto();
                             break;
-                        case 3:
-                            cadastrarUsuario();
-                            break;
+//                        case 3:
+//                            cadastrarUsuario();
+//                            break;
 
                         case 8:
                             System.out.println("Fim");
@@ -61,54 +70,17 @@ public class Main {
                             System.out.println("Opcao invalida");
                     }
 
-                } while (opcao != 8);
+                } while (opcao != 8);*/
             }
         } while (opcao != 8);
 
     }
 
-    private static void comprarProduto() {
-        System.out.println("Itens na máquina:");
-        double valorAPagar = 0;
-        for (Item item : itemList) {
-            System.out.println(item.getId() + " " + item.getDescricao() + ": R$ " + item.getValor());
-        }
-        int idProduto = Console.lerInt("Digite o código do produto: ");
-        int i = 0;
-        for (i = 0; i < itemList.size(); i++) {
-            Item item = itemList.get(i);
-            if (idProduto == item.getId()) {
-                valorAPagar += item.getValor();
-                int formaPagamento = Console.lerInt("Digite 1 para debitar do crédito e 2 para pagar via maquininha: ");
-                if (formaPagamento == 1) {
-                    if(usuarioLogado.getCredito().getValorTotal() >= valorAPagar) {
-                        usuarioLogado.getCredito().pagarCompra(valorAPagar);
-                        System.out.println("Debitado do crédito, sobrou: R$ " + usuarioLogado.getCredito().getValorTotal());
-                    } else {
-                        System.out.println("Saldo insuficiente!!!");
-                        break;
-                    }
-                }
-            }
-        }
-        if(i == itemList.size()) {
-            System.out.println("Produto não encontrado: " + idProduto);
-        }
-
-    }
 
     private static void mostrarItens() {
 
     }
 
-    private static void mostrarMenuUsuarioMensal() {
-        System.out.println("\n\n===========================================");
-        System.out.println("Usuário: " + usuarioLogado.getNome() + " logado");
-        System.out.println("===========================================");
-        System.out.println("1 - Comprar produto");
-        System.out.println("2 - Colocar crédito");
-        System.out.println("8 - Sair");
-    }
 
     private static Usuario efetuarLogin() {
         String usuario = Console.lerString("Digite o nome do usuario: ");

@@ -17,6 +17,6 @@ public class Credito {
     }
 
     public void pagarCompra(double valorPago) {
-
+        valorTotal -= valorPago;
     }
 }

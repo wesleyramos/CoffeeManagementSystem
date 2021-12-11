@@ -8,6 +8,10 @@ public abstract class Usuario {
     private String senha;
     private Credito credito;
 
+    public int getId() {
+        return id;
+    }
+
     public Credito getCredito() {
         return credito;
     }
