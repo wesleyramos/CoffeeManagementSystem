@@ -26,15 +26,6 @@ public class UsuarioDAO implements InterfaceDAO {
                 Statement statement = BancoDeDados.conectar().createStatement();
 
                 if (statement != null) {
-                    statement.execute("CREATE TABLE IF NOT EXISTS usuario( " +
-                            "id_usuario INTEGER NOT NULL UNIQUE" +
-                            ", nome TEXT NOT NULL" +
-                            ", usuario TEXT NOT NULL" +
-                            ", senha TEXT NOT NULL" +
-                            ", id_credito INTEGER NOT NULL" +
-                            ", tipo INTEGER NOT NULL" +
-                            ", PRIMARY KEY('id_usuario' AUTOINCREMENT))");
-
                     PreparedStatement preparedStatement = BancoDeDados.conectar()
                             .prepareStatement("INSERT INTO usuario(nome, usuario, senha, id_credito, tipo) VALUES (?,?,?,?,?)");
 
@@ -149,10 +140,13 @@ public class UsuarioDAO implements InterfaceDAO {
                         Credito credito = new Credito(idCredito, valorTotal);
                         switch (tipo) {
                             case 0:
-                                usuario = new UsuarioMensal(idUsuario, nome, senha, credito);
+                                usuario = new UsuarioMensal(idUsuario, nome, login, senha, credito, tipo);
+                                System.out.println("aqui1");
                                 break;
                             case 1:
-                                usuario = new UsuarioAdmin(idUsuario, nome, login, senha, credito);
+                                usuario = new UsuarioAdmin(idUsuario, nome, login, senha, credito, tipo);
+                                System.out.println("aqui2");
+                                System.out.println("usuario: " + usuario);
                                 break;
                             case 2:
                             default:

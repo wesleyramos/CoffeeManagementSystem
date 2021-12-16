@@ -17,6 +17,15 @@ public abstract class Usuario {
         this.credito = credito;
     }
 
+    public Usuario(int id, String nome, String usuario, String senha, Credito credito, int tipo) {
+        this.id = id;
+        this.nome = nome;
+        this.usuario = usuario;
+        this.senha = senha;
+        this.credito = credito;
+        this.tipo = tipo;
+    }
+
     public Usuario(String _nome, String _usuario, String _senha, Credito _credito, int _tipo) {
         this.nome = _nome;
         this.senha = _senha;
@@ -82,6 +91,8 @@ public abstract class Usuario {
                 ", nome='" + nome + '\'' +
                 ", usuario='" + usuario + '\'' +
                 ", senha='" + senha + '\'' +
+                ", credito=" + credito +
+                ", tipo=" + tipo +
                 '}';
     }
 

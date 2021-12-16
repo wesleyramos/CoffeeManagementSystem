@@ -19,42 +19,42 @@ public class MenuAdmin {
 
     public static Usuario mostrar(Usuario usuarioLogado, List<Item> itemList, List<Historico> historicoSistema, ListaVenda listaVendas) throws InterruptedException {
         int opcao;
-        if (usuarioLogado instanceof UsuarioMensal) {
-            do {
-                menuAdmin(usuarioLogado);
-                opcao = Console.lerInt("Escolha uma opcao:");
-                System.out.println("\n\n");
-                switch (opcao) {
-                    case 1:
-                        String nome = Console.lerString("Nome:");
-                        String login = Console.lerString("Login:");
-                        String senha = Console.lerString("Senha:");
-                        int tipo = Console.lerInt("Tipo: 1 - Mensal, 2 - Admin");
-                        cadastrarUsuario(nome, login, senha, tipo);
-                    case 2:
-                        ComprarProduto.execute(itemList, usuarioLogado, historicoSistema, listaVendas);
-                        break;
-                    case 3:
-                        imprimirHistorico(listaVendas);
-                        break;
-                    case 4:
-                        System.out.println("Em contrução, volte mais tarde!");
-                        break;
-                    case 5:
-                        System.out.println("Em contrução, volte mais tarde!");
-                        break;
-                    case 6:
-                        System.out.println("Em contrução, volte mais tarde!");
-                        break;
-                    case 7:
-                        System.out.println("Usuário deslogado!");
-                        break;
-                    default:
-                        System.out.println("Opcao invalida");
-                }
 
-            } while (opcao != 3);
-        }
+        do {
+            menuAdmin(usuarioLogado);
+            opcao = Console.lerInt("Escolha uma opcao:");
+            System.out.println("\n\n");
+            switch (opcao) {
+                case 1:
+                    String nome = Console.lerString("Nome:");
+                    String login = Console.lerString("Login:");
+                    String senha = Console.lerString("Senha:");
+                    int tipo = Console.lerInt("Tipo: 1 - Mensal, 2 - Admin");
+                    cadastrarUsuario(nome, login, senha, tipo);
+                case 2:
+                    ComprarProduto.execute(itemList, usuarioLogado, historicoSistema, listaVendas);
+                    break;
+                case 3:
+                    imprimirHistorico(listaVendas);
+                    break;
+                case 4:
+                    System.out.println("Em contrução, volte mais tarde!");
+                    break;
+                case 5:
+                    System.out.println("Em contrução, volte mais tarde!");
+                    break;
+                case 6:
+                    System.out.println("Em contrução, volte mais tarde!");
+                    break;
+                case 7:
+                    System.out.println("Usuário deslogado!");
+                    break;
+                default:
+                    System.out.println("Opcao invalida");
+            }
+
+        } while (opcao != 3);
+
         return null;
     }
 

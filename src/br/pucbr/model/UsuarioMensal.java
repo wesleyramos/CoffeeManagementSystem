@@ -20,6 +20,11 @@ public class UsuarioMensal extends Usuario {
         super(id, nome, senha, credito);
     }
 
+    public UsuarioMensal(int id, String nome, String usuario, String senha, Credito credito, int tipo) {
+        super(id, nome, usuario, senha, credito, tipo);
+
+    }
+
     public static Double getDesconto() {
         return desconto;
     }

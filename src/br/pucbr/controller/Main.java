@@ -8,6 +8,7 @@ import br.pucbr.model.Usuario;
 import br.pucbr.model.UsuarioAdmin;
 import br.pucbr.model.UsuarioMensal;
 import br.pucbr.model.dao.UsuarioDAO;
+import br.pucbr.utils.BancoDeDados;
 import br.pucbr.utils.ListaVenda;
 import br.pucbr.utils.Login;
 import br.pucbr.utils.MenuAdmin;
@@ -32,8 +33,9 @@ public class Main {
     private static Usuario usuarioLogado = null;
 
     public static void main(String[] args) throws InterruptedException {
+        BancoDeDados.criarTabelas();
 
-        usuarioDAO.inserir(new UsuarioAdmin(3, "admin", "admin", "admin", new Credito(0d)));
+        usuarioDAO.inserir(new UsuarioAdmin("admin", "admin", "admin", new Credito(0d)));
 
         int opcao = 8;
         do {
@@ -46,6 +48,7 @@ public class Main {
                         String usuario = Console.lerString("Digite o nome do usuario: ");
                         String senha = Console.lerString("Digite a senha do usuario: ");
                         usuarioLogado = Login.efetuarLogin(usuario, senha);
+                        System.out.println("usuario: " + usuarioLogado);
                         if (null == usuarioLogado) {
                             System.out.println("\n\n===========================================");
                             System.out.println("Verifique usuário e senha, dados incorretos!!!");
@@ -60,10 +63,14 @@ public class Main {
                 }
 
             } else {
-                if (usuarioLogado instanceof UsuarioMensal) {
-                    usuarioLogado = MenuUsuarioMensal.mostrar(usuarioLogado, itemList, historicoSistema, vendas);
-                } else if (usuarioLogado instanceof UsuarioAdmin) {
-                    usuarioLogado = MenuAdmin.mostrar(usuarioLogado, itemList, historicoSistema, vendas);
+                System.out.println("teste: " + usuarioLogado.getTipo());
+                switch (usuarioLogado.getTipo()) {
+                    case 0:
+                        usuarioLogado = MenuUsuarioMensal.mostrar(usuarioLogado, itemList, historicoSistema, vendas);
+                        System.out.println("usuario: " + usuarioLogado);
+                    case 1:
+                        System.out.println("teste123131231231");
+                        usuarioLogado = MenuAdmin.mostrar(usuarioLogado, itemList, historicoSistema, vendas);
                 }
             }
         } while (opcao != 8);
