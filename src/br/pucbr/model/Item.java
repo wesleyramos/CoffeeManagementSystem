@@ -13,6 +13,13 @@ public class Item {
         this.estoque = estoque;
     }
 
+    public Item( String descricao, Double valor, Estoque estoque) {
+        this.id = id;
+        this.descricao = descricao;
+        this.valor = valor;
+        this.estoque = estoque;
+    }
+
     public Estoque getEstoque() {
         return estoque;
     }
@@ -21,11 +28,25 @@ public class Item {
         return id;
     }
 
+    public void setId(int id) { this.id = id; }
+
     public String getDescricao() {
         return descricao;
     }
 
     public Double getValor() {
         return valor;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public void setValor(Double valor) {
+        this.valor = valor;
+    }
+
+    public void setEstoque(Estoque estoque) {
+        this.estoque = estoque;
     }
 }

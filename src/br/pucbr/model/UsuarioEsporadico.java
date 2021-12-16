@@ -1,6 +1,7 @@
 package br.pucbr.model;
 
 public class UsuarioEsporadico {
+
 //public class UsuarioEsporadico extends Usuario {
 
 //    public UsuarioEsporadico() {

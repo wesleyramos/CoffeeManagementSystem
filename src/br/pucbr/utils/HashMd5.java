@@ -1,0 +1,20 @@
+package br.pucbr.utils;
+
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+public class HashMd5 {
+
+    public static String gerarHashMd5(String value) {
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        BigInteger hash = new BigInteger(1, md.digest(value.getBytes()));
+        return hash.toString(16);
+    }
+
+}

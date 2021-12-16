@@ -88,7 +88,7 @@ public class ComprarProduto {
         item.getEstoque().venderItem();
         usuario.getCredito().pagarCompra(item.getValor());
         int idVenda = listaVendas.adicionarVenda(dataCompra, item.getValor(), item.getId());
-        historicoSistema.add(new Historico(usuario.getId(), idVenda, dataCompra));
+        historicoSistema.add(new Historico(usuario.getId(), idVenda, dataCompra, 0d));
         System.out.println("\nCompra realizada com sucesso!!!");
     }
 
