@@ -9,20 +9,20 @@ public abstract class Usuario {
     private Credito credito;
     private int tipo; //TODO Enum para o tipo
 
-    public int getId() {
-        return id;
-    }
-
-    public Credito getCredito() {
-        return credito;
-    }
-
     public Usuario(int id, String nome, String usuario, String senha, Credito credito) {
         this.id = id;
         this.nome = nome;
         this.usuario = usuario;
         this.senha = senha;
         this.credito = credito;
+    }
+
+    public Usuario(String _nome, String _usuario, String _senha, Credito _credito, int _tipo) {
+        this.nome = _nome;
+        this.senha = _senha;
+        this.credito = _credito;
+        this.tipo = _tipo;
+        this.usuario = _usuario;
     }
 
     public Usuario(String _nome, String _senha, Credito _credito, int _tipo) {
@@ -39,7 +39,17 @@ public abstract class Usuario {
         this.credito = credito;
     }
 
-    public void setId(int id) { this.id = id; }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Credito getCredito() {
+        return credito;
+    }
 
     public String getNome() {
         return nome;
@@ -53,11 +63,17 @@ public abstract class Usuario {
         return senha;
     }
 
-    public int getTipo() { return tipo; }
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
 
-    public void setTipo(int tipo) { this.tipo = tipo; }
+    public int getTipo() {
+        return tipo;
+    }
 
-    public void setSenha(String senha) { this.senha = senha; }
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
+    }
 
     @Override
     public String toString() {

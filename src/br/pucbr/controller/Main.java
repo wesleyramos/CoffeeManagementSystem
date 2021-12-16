@@ -7,7 +7,9 @@ import br.pucbr.model.Item;
 import br.pucbr.model.Usuario;
 import br.pucbr.model.UsuarioAdmin;
 import br.pucbr.model.UsuarioMensal;
+import br.pucbr.model.dao.UsuarioDAO;
 import br.pucbr.utils.ListaVenda;
+import br.pucbr.utils.Login;
 import br.pucbr.utils.MenuAdmin;
 import br.pucbr.utils.MenuUsuarioMensal;
 
@@ -18,18 +20,21 @@ import java.util.List;
 public class Main {
 
     private static List<Usuario> usuarioList = Arrays.asList(
-            new UsuarioMensal(2, "wesley", "wesley", "wesley", new Credito(0d)),
-            new UsuarioAdmin(3, "admin", "admin", "admin", new Credito(0d))
+            new UsuarioMensal(2, "wesley", "wesley", "wesley", new Credito(0d))
     );
     private static List<Item> itemList = Arrays.asList(new Item(1, "café extra forte", 4d, new Estoque(3, 1)));
     private static List<Historico> historicoSistema = new ArrayList<>();
     private static ListaVenda vendas = new ListaVenda();
+    private static UsuarioDAO usuarioDAO = new UsuarioDAO();
 
     private static int proximoIdUsuario = 3;
 
     private static Usuario usuarioLogado = null;
 
     public static void main(String[] args) throws InterruptedException {
+
+        usuarioDAO.inserir(new UsuarioAdmin(3, "admin", "admin", "admin", new Credito(0d)));
+
         int opcao = 8;
         do {
             if (null == usuarioLogado) {
@@ -38,7 +43,9 @@ public class Main {
                 System.out.println("\n\n");
                 switch (opcao) {
                     case 1:
-                        usuarioLogado = efetuarLogin();
+                        String usuario = Console.lerString("Digite o nome do usuario: ");
+                        String senha = Console.lerString("Digite a senha do usuario: ");
+                        usuarioLogado = Login.efetuarLogin(usuario, senha);
                         if (null == usuarioLogado) {
                             System.out.println("\n\n===========================================");
                             System.out.println("Verifique usuário e senha, dados incorretos!!!");
@@ -62,20 +69,18 @@ public class Main {
         } while (opcao != 8);
     }
 
-    private static Usuario efetuarLogin() {
-        String usuario = Console.lerString("Digite o nome do usuario: ");
-        String senha = Console.lerString("Digite a senha do usuario: ");
-        for (Usuario usuarioVerificado : usuarioList) {
-            if (usuarioVerificado.getUsuario().equals(usuario)) {
-                if (usuarioVerificado.getSenha().equals(senha)) {
-                    return usuarioVerificado;
-                }
-            } else {
-                return null;
-            }
-        }
-        return null;
-    }
+//    public static Usuario efetuarLogin(String usuario, String senha) {
+//
+//        Usuario usuarioVerificado = usuarioDAO.buscarPorUsuario(usuario);
+//        if (null == usuarioVerificado) {
+//            System.out.println("Usuário não encontrado!");
+//        } else {
+//            if (usuarioVerificado.getSenha().equals(HashMd5.gerarHashMd5(senha))) {
+//                return usuarioVerificado;
+//            }
+//        }
+//        return null;
+//    }
 
     public static void mostrarMenu() {
         System.out.println("\n\n===========================================");

@@ -14,6 +14,9 @@ public class Credito {
         this.valorTotal = valorTotal;
     }
 
+    public Credito() {
+    }
+
     public Double getValorTotal() {
         return valorTotal;
     }
