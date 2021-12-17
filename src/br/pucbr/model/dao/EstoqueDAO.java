@@ -9,48 +9,52 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-public class EstoqueDAO implements InterfaceDAO{
+public class EstoqueDAO implements InterfaceDAO {
 
     @Override
-    public Estoque inserir(Object _estoque) throws RuntimeException, SQLException {
-
-        if( _estoque instanceof Estoque){
+    public Estoque inserir(Object _estoque) {
+        if (_estoque instanceof Estoque) {
             Estoque estoque = (Estoque) _estoque;
-            Statement statement = BancoDeDados.conectar().createStatement();
 
-            if( statement != null ){
-                statement.execute("CREATE TABLE IF NOT EXISTS estoque( " +
-                        "id_estoque INTEGER NOT NULL UNIQUE" +
-                        ", estoque_atual NUMERIC NOT NULL" +
-                        ", estoque_minimo NUMERIC NOT NULL" +
-                        ", PRIMARY KEY('id_estoque' AUTOINCREMENT))");
+            try {
+                Statement statement = BancoDeDados.conectar().createStatement();
 
-                PreparedStatement preparedStatement = BancoDeDados.conectar().prepareStatement("INSERT INTO estoque(estoque_atual, estoque_minimo) VALUES (?,?)");
-                preparedStatement.setDouble(1, estoque.getEstoqueAtual());
-                preparedStatement.setDouble(2, estoque.getEstoqueMinimo());
-                preparedStatement.executeUpdate();
+                if (statement != null) {
+                    statement.execute("CREATE TABLE IF NOT EXISTS estoque( " +
+                            "id_estoque INTEGER NOT NULL UNIQUE" +
+                            ", estoque_atual NUMERIC NOT NULL" +
+                            ", estoque_minimo NUMERIC NOT NULL" +
+                            ", PRIMARY KEY('id_estoque' AUTOINCREMENT))");
 
-                ResultSet genKeys = preparedStatement.getGeneratedKeys();
-                if( genKeys.next() ){
-                    estoque.setId(genKeys.getInt(1));
+                    PreparedStatement preparedStatement = BancoDeDados.conectar().prepareStatement("INSERT INTO estoque(estoque_atual, estoque_minimo) VALUES (?,?)");
+                    preparedStatement.setDouble(1, estoque.getEstoqueAtual());
+                    preparedStatement.setDouble(2, estoque.getEstoqueMinimo());
+                    preparedStatement.executeUpdate();
+
+                    ResultSet genKeys = preparedStatement.getGeneratedKeys();
+                    if (genKeys.next()) {
+                        estoque.setId(genKeys.getInt(1));
+                    }
+
+                    return estoque;
                 }
 
-                return estoque;
-            }else{
-                throw new SQLException();
+            } catch (SQLException sqlException) {
+                System.err.println("Erro ao inserir usuario: " + sqlException.getMessage());
             }
 
-        }else{
-            throw new RuntimeException();
+        } else {
+            System.out.println("estoque de tipo incorreto: " + _estoque.getClass());
         }
-
+        return null;
     }
+
 
     @Override
     public boolean alterar(Object _estoque) throws Exception {
 
-        if( _estoque != null ){
-            if( _estoque instanceof Estoque ){
+        if (_estoque != null) {
+            if (_estoque instanceof Estoque) {
                 Estoque estoque = (Estoque) _estoque;
 
                 PreparedStatement preparedStatement = BancoDeDados.conectar().prepareStatement("UPDATE estoque SET estoque_atual=?, estoque_minimo=? WHERE id_estoque=?");
@@ -66,19 +70,19 @@ public class EstoqueDAO implements InterfaceDAO{
         return false;
     }
 
-    public List<Estoque> buscar(Object _estoque) throws Exception{
+    public List<Estoque> buscar(Object _estoque) throws Exception {
 
-        if( _estoque != null ){
-            if( _estoque instanceof Estoque ) {
+        if (_estoque != null) {
+            if (_estoque instanceof Estoque) {
                 Estoque estoque = (Estoque) _estoque;
 
                 PreparedStatement preparedStatement = BancoDeDados.conectar().prepareStatement("SELECT * FROM estoque WHERE estoque_atual=?");
                 preparedStatement.setDouble(1, estoque.getEstoqueAtual());
 
                 ResultSet rs = preparedStatement.getResultSet();
-                while (rs.next()){
-                    System.out.println( "ID: " + rs.getInt("id") );
-                    System.out.println( "Valor total: " + rs.getDouble("valor_total") );
+                while (rs.next()) {
+                    System.out.println("ID: " + rs.getInt("id"));
+                    System.out.println("Valor total: " + rs.getDouble("valor_total"));
                 }
 
             }
@@ -89,9 +93,9 @@ public class EstoqueDAO implements InterfaceDAO{
     }
 
     @Override
-    public boolean remover(Integer id) throws Exception{
+    public boolean remover(Integer id) throws Exception {
 
-        if( id != null ){
+        if (id != null) {
             PreparedStatement preparedStatement = BancoDeDados.conectar().prepareStatement("DELETE FROM estoque WHERE id_estoque=?");
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();

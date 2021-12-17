@@ -141,12 +141,9 @@ public class UsuarioDAO implements InterfaceDAO {
                         switch (tipo) {
                             case 0:
                                 usuario = new UsuarioMensal(idUsuario, nome, login, senha, credito, tipo);
-                                System.out.println("aqui1");
                                 break;
                             case 1:
                                 usuario = new UsuarioAdmin(idUsuario, nome, login, senha, credito, tipo);
-                                System.out.println("aqui2");
-                                System.out.println("usuario: " + usuario);
                                 break;
                             case 2:
                             default:

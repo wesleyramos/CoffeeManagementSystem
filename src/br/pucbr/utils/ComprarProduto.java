@@ -10,7 +10,9 @@ import java.util.List;
 
 public class ComprarProduto {
 
-    public static boolean execute(List<Item> itemList, Usuario usuarioLogado, List<Historico> historicoSistema, ListaVenda listaVendas) throws InterruptedException {
+    public static boolean menuComprar(List<Item> itemList, Usuario usuarioLogado,
+                                      List<Historico> historicoSistema, ListaVenda listaVendas)
+            throws InterruptedException {
         System.out.println("Itens na máquina:");
         System.out.println("0 voltar ao menu anterior.");
         for (Item item : itemList) {
@@ -21,10 +23,12 @@ public class ComprarProduto {
             System.out.println("Compra cancelada.");
             return false;
         }
-        return comprarProdutoComId(itemList, idProduto, usuarioLogado, listaVendas, historicoSistema);
+        return comprarProduto(itemList, idProduto, usuarioLogado, listaVendas, historicoSistema);
     }
 
-    private static boolean comprarProdutoComId(List<Item> itemList, int idProduto, Usuario usuarioLogado, ListaVenda listaVendas, List<Historico> historicoSistema) throws InterruptedException {
+    public static boolean comprarProduto(List<Item> itemList, int idProduto, Usuario usuarioLogado,
+                                         ListaVenda listaVendas, List<Historico> historicoSistema)
+            throws InterruptedException {
         int i = 0;
         for (i = 0; i < itemList.size(); i++) {
             Item item = itemList.get(i);

@@ -3,37 +3,69 @@ package br.pucbr.controller;
 import br.pucbr.model.Credito;
 import br.pucbr.model.Usuario;
 import br.pucbr.model.UsuarioAdmin;
+import br.pucbr.model.dao.ItemDAO;
 import br.pucbr.model.dao.UsuarioDAO;
 import br.pucbr.utils.BancoDeDados;
 import br.pucbr.utils.Login;
-import org.junit.Test;
+import br.pucbr.utils.MenuAdmin;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class MainTest {
 
+    @BeforeAll
+    public static void setupDB() {
+        BancoDeDados.criarTabelas();
+    }
+
+    @AfterAll
+    public static void dropDB() {
+        BancoDeDados.droparBase();
+    }
+
     @Test
     public void testeLoginFail() {
-        BancoDeDados.criarTabelas();
-
         Usuario usuario = Login.efetuarLogin("admin", "admin");
         assertNull(usuario);
-
     }
 
     @Test
     public void testeLoginSucesso() {
-        BancoDeDados.criarTabelas();
-
         UsuarioAdmin admin = new UsuarioAdmin("admin", "admin", "admin", new Credito(0d));
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         usuarioDAO.inserir(admin);
 
         Usuario usuario = Login.efetuarLogin("admin", "admin");
-        assertEquals("login sucesso!", "admin", usuario.getUsuario());
 
+
+        assertEquals("admin", usuario.getUsuario());
     }
+
+    @Test
+    public void testeCadastrarUsuarioWesley() {
+        int idUsuario = MenuAdmin.cadastrarUsuario("wesley", "wesley", "wesley", 0);
+        assertNotNull(idUsuario);
+    }
+
+    @Test
+    public void testeCadastrarProduto() {
+        Integer id_item = MenuAdmin.cadastrarItem("desc1", 4d, 1d, 1d);
+        assertNotNull(id_item);
+    }
+
+
+    @Test
+    public void testeComprarComMaquininha() {
+        ItemDAO item = new ItemDAO();
+        //        ComprarProduto.comprarProduto(1)
+        //        assertNotNull(idUsuario);
+    }
+
 
 //    @Test
 //    public void tentarComprarSemSaldo() {

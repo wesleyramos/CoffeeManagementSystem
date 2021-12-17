@@ -63,13 +63,10 @@ public class Main {
                 }
 
             } else {
-                System.out.println("teste: " + usuarioLogado.getTipo());
                 switch (usuarioLogado.getTipo()) {
                     case 0:
                         usuarioLogado = MenuUsuarioMensal.mostrar(usuarioLogado, itemList, historicoSistema, vendas);
-                        System.out.println("usuario: " + usuarioLogado);
                     case 1:
-                        System.out.println("teste123131231231");
                         usuarioLogado = MenuAdmin.mostrar(usuarioLogado, itemList, historicoSistema, vendas);
                 }
             }

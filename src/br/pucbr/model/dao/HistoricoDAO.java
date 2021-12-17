@@ -4,7 +4,6 @@ import br.pucbr.model.Historico;
 import br.pucbr.utils.BancoDeDados;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class HistoricoDAO implements InterfaceDAO{

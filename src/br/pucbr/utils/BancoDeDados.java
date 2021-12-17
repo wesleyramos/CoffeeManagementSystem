@@ -2,6 +2,7 @@ package br.pucbr.utils;
 
 import br.pucbr.model.dao.UsuarioDAO;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -67,4 +68,16 @@ public class BancoDeDados {
         return conn;
     }
 
+    public static void droparBase() {
+        File file = new File("/home/wesley/arquivos/03_PosGraduacao/trabalho/CoffeeManagementSystem/cafe.db");
+
+        if(file.delete())
+        {
+//            System.out.println("File deleted successfully");
+        }
+        else
+        {
+//            System.out.println("Failed to delete the file");
+        }
+    }
 }

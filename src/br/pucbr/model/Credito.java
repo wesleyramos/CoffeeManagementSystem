@@ -15,10 +15,15 @@ public class Credito {
     }
 
     public Credito() {
+        this.valorTotal = 0d;
     }
 
     public Double getValorTotal() {
         return valorTotal;
+    }
+
+    public void setValorTotal(Double valorTotal) {
+        this.valorTotal = valorTotal;
     }
 
     public void inserirCredito() {
@@ -37,7 +42,11 @@ public class Credito {
         this.id = id;
     }
 
-    public void setValorTotal(Double valorTotal) {
-        this.valorTotal = valorTotal;
+    @Override
+    public String toString() {
+        return "Credito{" +
+                "id=" + id +
+                ", valorTotal=" + valorTotal +
+                '}';
     }
 }

@@ -2,6 +2,7 @@ package br.pucbr.utils;
 
 import br.pucbr.controller.Console;
 import br.pucbr.model.Credito;
+import br.pucbr.model.Estoque;
 import br.pucbr.model.Historico;
 import br.pucbr.model.Item;
 import br.pucbr.model.Usuario;
@@ -9,6 +10,8 @@ import br.pucbr.model.UsuarioAdmin;
 import br.pucbr.model.UsuarioMensal;
 import br.pucbr.model.Venda;
 import br.pucbr.model.dao.CreditoDAO;
+import br.pucbr.model.dao.EstoqueDAO;
+import br.pucbr.model.dao.ItemDAO;
 import br.pucbr.model.dao.UsuarioDAO;
 
 import java.util.List;
@@ -30,9 +33,16 @@ public class MenuAdmin {
                     String login = Console.lerString("Login:");
                     String senha = Console.lerString("Senha:");
                     int tipo = Console.lerInt("Tipo: 1 - Mensal, 2 - Admin");
-                    cadastrarUsuario(nome, login, senha, tipo);
+                    int id_usuario = cadastrarUsuario(nome, login, senha, tipo);
+                    break;
                 case 2:
-                    ComprarProduto.execute(itemList, usuarioLogado, historicoSistema, listaVendas);
+                    String desc = Console.lerString("Descricao:");
+                    Double valor = Console.lerDouble("Valor:");
+                    double estoqueAtual = Console.lerDouble("Estoque Atual:");
+                    double estoqueMinimo = Console.lerDouble("Estoque mínimo:");
+
+
+                    int id_item = cadastrarItem(desc, valor, estoqueAtual, estoqueMinimo);
                     break;
                 case 3:
                     imprimirHistorico(listaVendas);
@@ -58,10 +68,9 @@ public class MenuAdmin {
         return null;
     }
 
-    private static void cadastrarUsuario(String nome, String login, String senha, int tipo) {
-        Credito creditoInserido = null;
+    public static int cadastrarUsuario(String nome, String login, String senha, int tipo) {
+        Credito creditoInserido = new Credito();
         Usuario usuario = null;
-        creditoInserido = new Credito();
         creditoDAO.inserir(creditoInserido);
         switch (tipo) {
             case 0:
@@ -74,6 +83,19 @@ public class MenuAdmin {
                 System.out.println("Tipo de usuário inválido: " + tipo);
         }
         usuarioDAO.inserir(usuario);
+        return usuario.getId();
+    }
+
+    public static Integer cadastrarItem(String descricao, Double valor, Double estoqueAtual, Double estoqueMinimo) {
+        Estoque estoque = new Estoque(estoqueAtual, estoqueMinimo);
+        EstoqueDAO estoqueDAO = new EstoqueDAO();
+        estoqueDAO.inserir(estoque);
+
+        Item item = new Item(descricao, valor, estoque);
+        ItemDAO itemDAO = new ItemDAO();
+        Item inserir = itemDAO.inserir(item);
+
+        return inserir.getId();
     }
 
     public static void imprimirHistorico(ListaVenda listaVendas) {
@@ -87,10 +109,10 @@ public class MenuAdmin {
         System.out.println("Admin: " + usuario.getNome() + " logado");
         System.out.println("===========================================");
         System.out.println("1 - Cadastrar usuário");
-        System.out.println("2 - Comprar produto");
+        System.out.println("2 - Cadastrar item");
         System.out.println("3 - Colocar crédito");
         System.out.println("4 - Imprimir Histórico");
-        System.out.println("5 - Cadastrar item");
+        System.out.println("5 - Comprar produto");
         System.out.println("6 - Atualizar estoque");
         System.out.println("7 - Deslogar");
     }
