@@ -40,12 +40,10 @@ public class MenuAdmin {
                     Double valor = Console.lerDouble("Valor:");
                     double estoqueAtual = Console.lerDouble("Estoque Atual:");
                     double estoqueMinimo = Console.lerDouble("Estoque mínimo:");
-
-
-                    int id_item = cadastrarItem(desc, valor, estoqueAtual, estoqueMinimo);
+                    cadastrarItem(desc, valor, estoqueAtual, estoqueMinimo);
                     break;
                 case 3:
-                    imprimirHistorico(listaVendas);
+                    ComprarProduto.menuComprar(usuarioLogado);
                     break;
                 case 4:
                     System.out.println("Em contrução, volte mais tarde!");
@@ -110,8 +108,9 @@ public class MenuAdmin {
         System.out.println("===========================================");
         System.out.println("1 - Cadastrar usuário");
         System.out.println("2 - Cadastrar item");
-        System.out.println("3 - Colocar crédito");
+        System.out.println("3 - Comprar produto");
         System.out.println("4 - Imprimir Histórico");
+        System.out.println("5 - Colocar crédito");
         System.out.println("5 - Comprar produto");
         System.out.println("6 - Atualizar estoque");
         System.out.println("7 - Deslogar");

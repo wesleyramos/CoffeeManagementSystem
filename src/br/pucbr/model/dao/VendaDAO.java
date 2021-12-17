@@ -12,52 +12,55 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VendaDAO implements InterfaceDAO{
+public class VendaDAO implements InterfaceDAO {
 
     @Override
-    public Venda inserir(Object _venda) throws RuntimeException, SQLException {
+    public Venda inserir(Object _venda) {
 
-        if( _venda instanceof Venda){
+        if (_venda instanceof Venda) {
             Venda venda = (Venda) _venda;
-            Statement statement = BancoDeDados.conectar().createStatement();
+            try {
+                Statement statement = BancoDeDados.conectar().createStatement();
 
-            if( statement != null ){
-                statement.execute("CREATE TABLE IF NOT EXISTS venda( " +
-                        "id_venda INTEGER NOT NULL UNIQUE" +
-                        ", data DATE NOT NULL" +
-                        ", total NUMERIC NOT NULL" +
-                        ", id_item INTEGER NOT NULL" +
-                        ", PRIMARY KEY('id_venda' AUTOINCREMENT))");
+                if (statement != null) {
+                    statement.execute("CREATE TABLE IF NOT EXISTS venda( " +
+                            "id_venda INTEGER NOT NULL UNIQUE" +
+                            ", data DATE NOT NULL" +
+                            ", total NUMERIC NOT NULL" +
+                            ", id_item INTEGER NOT NULL" +
+                            ", PRIMARY KEY('id_venda' AUTOINCREMENT))");
 
-                PreparedStatement preparedStatement = BancoDeDados.conectar()
-                        .prepareStatement("INSERT INTO venda(data, total, id_item) VALUES (?,?,?)");
+                    PreparedStatement preparedStatement = BancoDeDados.conectar()
+                            .prepareStatement("INSERT INTO venda(data, total, id_item) VALUES (?,?,?)");
 
-                preparedStatement.setDate(1, new java.sql.Date(venda.getData().getTime()));
-                preparedStatement.setDouble(2, venda.getTotal());
-                preparedStatement.setInt(3, venda.getItem().getId());
-                preparedStatement.executeUpdate();
+                    preparedStatement.setDate(1, new java.sql.Date(venda.getData().getTime()));
+                    preparedStatement.setDouble(2, venda.getTotal());
+                    preparedStatement.setInt(3, venda.getItem().getId());
+                    preparedStatement.executeUpdate();
 
-                ResultSet genKeys = preparedStatement.getGeneratedKeys();
-                if( genKeys.next() ){
-                    venda.setId(genKeys.getInt(1));
+                    ResultSet genKeys = preparedStatement.getGeneratedKeys();
+                    if (genKeys.next()) {
+                        venda.setId(genKeys.getInt(1));
+                    }
+
+                    return venda;
                 }
 
-                return venda;
-            }else{
-                throw new SQLException();
+            } catch (SQLException sqlException) {
+                System.err.println("Erro ao inserir usuario: " + sqlException.getMessage());
             }
 
-        }else{
-            throw new RuntimeException();
+        } else {
+            System.out.println("_item de tipo incorreto!!!");
         }
-
+        return null;
     }
 
     @Override
     public boolean alterar(Object _venda) throws Exception {
 
-        if( _venda != null ){
-            if( _venda instanceof Venda ){
+        if (_venda != null) {
+            if (_venda instanceof Venda) {
                 Venda venda = (Venda) _venda;
 
                 PreparedStatement preparedStatement = BancoDeDados.conectar()
@@ -76,7 +79,7 @@ public class VendaDAO implements InterfaceDAO{
         return false;
     }
 
-    public List<Venda> buscar(int idVenda) throws Exception{
+    public List<Venda> buscar(int idVenda) throws Exception {
         PreparedStatement preparedStatement = BancoDeDados.conectar().prepareStatement("SELECT * FROM venda AS v " +
                 "INNER JOIN item AS i " +
                 "ON v.id_item = i.id_item " +
@@ -88,7 +91,7 @@ public class VendaDAO implements InterfaceDAO{
 
         ResultSet rs = preparedStatement.executeQuery();
         List<Venda> ret = new ArrayList<Venda>();
-        while (rs.next()){
+        while (rs.next()) {
             Estoque estoque = new Estoque(rs.getInt("id_estoque"), rs.getDouble("estoque_atual"), rs.getDouble("estoque_minimo"));
             Item item = new Item(rs.getInt("id_item"), rs.getString("descricao"), rs.getDouble("valor"), estoque);
             Venda venda = new Venda(rs.getInt("id_venda"), rs.getDate("data"), rs.getDouble("total"), item);
@@ -99,9 +102,9 @@ public class VendaDAO implements InterfaceDAO{
     }
 
     @Override
-    public boolean remover(Integer id) throws Exception{
+    public boolean remover(Integer id) throws Exception {
 
-        if( id != null ){
+        if (id != null) {
             PreparedStatement preparedStatement = BancoDeDados.conectar().prepareStatement("DELETE FROM venda WHERE id_venda=?");
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();

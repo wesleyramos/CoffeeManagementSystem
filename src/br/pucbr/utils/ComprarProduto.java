@@ -4,6 +4,9 @@ import br.pucbr.controller.Console;
 import br.pucbr.model.Historico;
 import br.pucbr.model.Item;
 import br.pucbr.model.Usuario;
+import br.pucbr.model.Venda;
+import br.pucbr.model.dao.HistoricoDAO;
+import br.pucbr.model.dao.VendaDAO;
 
 import java.util.Date;
 import java.util.List;
@@ -24,6 +27,30 @@ public class ComprarProduto {
             return false;
         }
         return comprarProduto(itemList, idProduto, usuarioLogado, listaVendas, historicoSistema);
+    }
+
+//    public static boolean menuComprar(Usuario usuarioLogado)
+//            throws InterruptedException {
+//        System.out.println("Itens na máquina:");
+//        System.out.println("0 voltar ao menu anterior.");
+//        for (Item item : itemList) {
+//            System.out.println(item.getId() + " " + item.getDescricao() + ": R$ " + item.getValor());
+//        }
+//        int idProduto = Console.lerInt("Digite o código do produto: ");
+//        if (idProduto == 0) {
+//            System.out.println("Compra cancelada.");
+//            return false;
+//        }
+//        return comprarProduto(itemList, idProduto, usuarioLogado, listaVendas, historicoSistema);
+//    }
+
+    public static Integer comprarProduto(Item item, Usuario usuarioLogado) {
+        Date data = new Date();
+        VendaDAO vendaDAO = new VendaDAO();
+        Venda venda = vendaDAO.inserir(new Venda(new Date(), item.getValor(), item.getId(), item));
+        HistoricoDAO historicoDAO = new HistoricoDAO();
+        historicoDAO.inserir(new Historico(usuarioLogado.getId(), venda.getId(), data, item.getValor()));
+        return venda.getId();
     }
 
     public static boolean comprarProduto(List<Item> itemList, int idProduto, Usuario usuarioLogado,

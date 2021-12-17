@@ -24,6 +24,14 @@ public class Venda {
         this.item = _item;
     }
 
+    public Venda(Date data, Double total, int itemId, Item _item) {
+        this.id = id;
+        this.itemId = itemId;
+        this.data = data;
+        this.total = total;
+        this.item = _item;
+    }
+
     public Venda(int id, Date data, Double total, Item _item) {
         this.id = id;
         this.data = data;
@@ -73,5 +81,7 @@ public class Venda {
         this.itemId = itemId;
     }
 
-    public Item getItem() { return item; }
+    public Item getItem() {
+        return item;
+    }
 }

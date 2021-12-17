@@ -1,11 +1,13 @@
 package br.pucbr.controller;
 
 import br.pucbr.model.Credito;
+import br.pucbr.model.Estoque;
+import br.pucbr.model.Item;
 import br.pucbr.model.Usuario;
 import br.pucbr.model.UsuarioAdmin;
-import br.pucbr.model.dao.ItemDAO;
 import br.pucbr.model.dao.UsuarioDAO;
 import br.pucbr.utils.BancoDeDados;
+import br.pucbr.utils.ComprarProduto;
 import br.pucbr.utils.Login;
 import br.pucbr.utils.MenuAdmin;
 import org.junit.jupiter.api.AfterAll;
@@ -61,9 +63,10 @@ public class MainTest {
 
     @Test
     public void testeComprarComMaquininha() {
-        ItemDAO item = new ItemDAO();
-        //        ComprarProduto.comprarProduto(1)
-        //        assertNotNull(idUsuario);
+        Usuario usuario = Login.efetuarLogin("admin", "admin");
+        Item item = new Item(1, "desc1", 1d, new Estoque(1, 1));
+        Integer id_venda = ComprarProduto.comprarProduto(item, usuario);
+        assertNotNull(id_venda);
     }
 
 
