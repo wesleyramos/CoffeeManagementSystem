@@ -13,6 +13,7 @@ public class Login {
             System.out.println("Usuário não encontrado!");
         } else {
             if (usuarioVerificado.getSenha().equals(HashMd5.gerarHashMd5(senha))) {
+                System.out.println("Login com sucesso!");
                 return usuarioVerificado;
             }
         }

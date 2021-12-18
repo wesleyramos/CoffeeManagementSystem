@@ -51,23 +51,27 @@ public class EstoqueDAO implements InterfaceDAO {
 
 
     @Override
-    public boolean alterar(Object _estoque) throws Exception {
+    public boolean alterar(Object _estoque) {
+        try {
+            if (_estoque != null) {
+                if (_estoque instanceof Estoque) {
+                    Estoque estoque = (Estoque) _estoque;
 
-        if (_estoque != null) {
-            if (_estoque instanceof Estoque) {
-                Estoque estoque = (Estoque) _estoque;
+                    PreparedStatement preparedStatement = BancoDeDados.conectar().prepareStatement("UPDATE estoque SET estoque_atual=?, estoque_minimo=? WHERE id_estoque=?");
+                    preparedStatement.setDouble(1, estoque.getEstoqueAtual());
+                    preparedStatement.setDouble(2, estoque.getEstoqueMinimo());
+                    preparedStatement.setInt(3, estoque.getId());
+                    preparedStatement.executeUpdate();
 
-                PreparedStatement preparedStatement = BancoDeDados.conectar().prepareStatement("UPDATE estoque SET estoque_atual=?, estoque_minimo=? WHERE id_estoque=?");
-                preparedStatement.setDouble(1, estoque.getEstoqueAtual());
-                preparedStatement.setDouble(2, estoque.getEstoqueMinimo());
-                preparedStatement.setInt(3, estoque.getId());
-                preparedStatement.executeUpdate();
-
-                return Boolean.TRUE;
+                    return Boolean.TRUE;
+                }
             }
-        }
 
-        return false;
+            return false;
+        } catch (Exception exc) {
+            System.out.println("Error to update estoque!" + exc.getMessage());
+            return false;
+        }
     }
 
     public List<Estoque> buscar(Object _estoque) throws Exception {

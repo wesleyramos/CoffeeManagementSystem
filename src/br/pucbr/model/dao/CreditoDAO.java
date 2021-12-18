@@ -22,7 +22,6 @@ public class CreditoDAO implements InterfaceDAO {
 
                 if (statement != null) {
                     PreparedStatement preparedStatement = BancoDeDados.conectar().prepareStatement("INSERT INTO credito(valor_total) VALUES (?)");
-                    System.out.println(credito);
                     preparedStatement.setDouble(1, credito.getValorTotal());
                     preparedStatement.executeUpdate();
 

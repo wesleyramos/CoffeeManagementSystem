@@ -17,6 +17,17 @@ public class Historico {
         this.total = _total;
     }
 
+    @Override
+    public String toString() {
+        return "Historico{" +
+                "id=" + id +
+                ", usuarioId=" + usuarioId +
+                ", vendaId=" + vendaId +
+                ", data=" + data +
+                ", total=" + total +
+                '}';
+    }
+
     public int getId() {
         return id;
     }

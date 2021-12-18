@@ -78,22 +78,26 @@ public class ItemDAO implements InterfaceDAO {
         return false;
     }
 
-    public List<Item> buscarPorDescricao(String descricao) throws Exception {
+    public List<Item> buscarPorDescricao(String descricao) {
+        try {
+            if (descricao != null && !descricao.equalsIgnoreCase("")) {
 
-        if (descricao != null && !descricao.equalsIgnoreCase("")) {
+                PreparedStatement preparedStatement = BancoDeDados.conectar().prepareStatement("SELECT * FROM item AS i INNER JOIN estoque AS e ON i.id_estoque = e.id_estoque WHERE descricao=?");
+                preparedStatement.setString(1, descricao);
 
-            PreparedStatement preparedStatement = BancoDeDados.conectar().prepareStatement("SELECT * FROM item AS i INNER JOIN estoque AS e ON i.id_estoque = e.id_estoque WHERE descricao=?");
-            preparedStatement.setString(1, descricao);
+                ResultSet rs = preparedStatement.executeQuery();
+                List<Item> ret = new ArrayList<Item>();
+                while (rs.next()) {
+                    Estoque estoque = new Estoque(rs.getInt("id_estoque"), rs.getDouble("estoque_atual"), rs.getDouble("estoque_minimo"));
+                    Item item = new Item(rs.getInt("id_item"), rs.getString("descricao"), rs.getDouble("valor"), estoque);
+                    ret.add(item);
+                }
 
-            ResultSet rs = preparedStatement.executeQuery();
-            List<Item> ret = new ArrayList<Item>();
-            while (rs.next()) {
-                Estoque estoque = new Estoque(rs.getInt("id_estoque"), rs.getDouble("estoque_atual"), rs.getDouble("estoque_minimo"));
-                Item item = new Item(rs.getInt("id_item"), rs.getString("descricao"), rs.getDouble("valor"), estoque);
-                ret.add(item);
+                return ret;
             }
-
-            return ret;
+        } catch (Exception exception) {
+            System.out.println("Erro to get item by description: " + exception.getMessage());
+            return null;
         }
 
         return null;
@@ -110,6 +114,25 @@ public class ItemDAO implements InterfaceDAO {
         }
 
         return false;
+    }
+
+    public List<Item> listar() {
+        try {
+            PreparedStatement preparedStatement = BancoDeDados.conectar().prepareStatement("SELECT * FROM item AS i INNER JOIN estoque AS e ON i.id_estoque = e.id_estoque");
+            ResultSet rs = preparedStatement.executeQuery();
+            List<Item> ret = new ArrayList<>();
+            while (rs.next()) {
+                Estoque estoque = new Estoque(rs.getInt("id_estoque"), rs.getDouble("estoque_atual"), rs.getDouble("estoque_minimo"));
+                Item item = new Item(rs.getInt("id_item"), rs.getString("descricao"), rs.getDouble("valor"), estoque);
+                ret.add(item);
+            }
+
+            return ret;
+        } catch (Exception exc) {
+            System.out.println("Erro to list item: " + exc.getMessage());
+        }
+
+        return null;
     }
 
 }

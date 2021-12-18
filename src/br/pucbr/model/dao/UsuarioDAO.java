@@ -40,6 +40,7 @@ public class UsuarioDAO implements InterfaceDAO {
                     if (genKeys.next()) {
                         usuario.setId(genKeys.getInt(1));
                     }
+                    System.out.println("usuário cadastrado com sucesso!");
                     return usuario;
                 }
 

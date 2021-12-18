@@ -54,9 +54,6 @@ public class MenuAdmin {
                 case 6:
                     System.out.println("Em contrução, volte mais tarde!");
                     break;
-                case 7:
-                    System.out.println("Usuário deslogado!");
-                    break;
                 default:
                     System.out.println("Opcao invalida");
             }
@@ -81,6 +78,7 @@ public class MenuAdmin {
                 System.out.println("Tipo de usuário inválido: " + tipo);
         }
         usuarioDAO.inserir(usuario);
+
         return usuario.getId();
     }
 
@@ -111,9 +109,7 @@ public class MenuAdmin {
         System.out.println("3 - Comprar produto");
         System.out.println("4 - Imprimir Histórico");
         System.out.println("5 - Colocar crédito");
-        System.out.println("5 - Comprar produto");
-        System.out.println("6 - Atualizar estoque");
-        System.out.println("7 - Deslogar");
+        System.out.println("6 - Deslogar");
     }
 
 }

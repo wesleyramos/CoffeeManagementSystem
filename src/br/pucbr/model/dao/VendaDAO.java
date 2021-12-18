@@ -16,7 +16,7 @@ public class VendaDAO implements InterfaceDAO {
 
     @Override
     public Venda inserir(Object _venda) {
-
+        System.out.println("venda: " + _venda);
         if (_venda instanceof Venda) {
             Venda venda = (Venda) _venda;
             try {
@@ -35,7 +35,7 @@ public class VendaDAO implements InterfaceDAO {
 
                     preparedStatement.setDate(1, new java.sql.Date(venda.getData().getTime()));
                     preparedStatement.setDouble(2, venda.getTotal());
-                    preparedStatement.setInt(3, venda.getItem().getId());
+                    preparedStatement.setInt(3, venda.getItemId());
                     preparedStatement.executeUpdate();
 
                     ResultSet genKeys = preparedStatement.getGeneratedKeys();
@@ -79,26 +79,32 @@ public class VendaDAO implements InterfaceDAO {
         return false;
     }
 
-    public List<Venda> buscar(int idVenda) throws Exception {
-        PreparedStatement preparedStatement = BancoDeDados.conectar().prepareStatement("SELECT * FROM venda AS v " +
-                "INNER JOIN item AS i " +
-                "ON v.id_item = i.id_item " +
-                "INNER JOIN estoque AS e " +
-                "ON i.id_estoque = e.id_estoque " +
-                "WHERE id_venda=?");
+    public List<Venda> buscar(int idVenda) {
+        try {
+            PreparedStatement preparedStatement = BancoDeDados.conectar().prepareStatement("SELECT * FROM venda AS v " +
+                    "INNER JOIN item AS i " +
+                    "ON v.id_item = i.id_item " +
+                    "INNER JOIN estoque AS e " +
+                    "ON i.id_estoque = e.id_estoque " +
+                    "WHERE id_venda=?");
 
-        preparedStatement.setInt(1, idVenda);
+            preparedStatement.setInt(1, idVenda);
 
-        ResultSet rs = preparedStatement.executeQuery();
-        List<Venda> ret = new ArrayList<Venda>();
-        while (rs.next()) {
-            Estoque estoque = new Estoque(rs.getInt("id_estoque"), rs.getDouble("estoque_atual"), rs.getDouble("estoque_minimo"));
-            Item item = new Item(rs.getInt("id_item"), rs.getString("descricao"), rs.getDouble("valor"), estoque);
-            Venda venda = new Venda(rs.getInt("id_venda"), rs.getDate("data"), rs.getDouble("total"), item);
-            ret.add(venda);
+            ResultSet rs = preparedStatement.executeQuery();
+            List<Venda> ret = new ArrayList<Venda>();
+            while (rs.next()) {
+                Estoque estoque = new Estoque(rs.getInt("id_estoque"), rs.getDouble("estoque_atual"), rs.getDouble("estoque_minimo"));
+                Item item = new Item(rs.getInt("id_item"), rs.getString("descricao"), rs.getDouble("valor"), estoque);
+                Venda venda = new Venda(rs.getInt("id_venda"), rs.getDate("data"), rs.getDouble("total"), item);
+                ret.add(venda);
+            }
+
+            return ret;
+        } catch (Exception ex) {
+            System.out.println("Erro to search sell: " + ex.getMessage());
+            return null;
         }
 
-        return ret;
     }
 
     @Override

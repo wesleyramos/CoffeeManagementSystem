@@ -1,11 +1,14 @@
 package br.pucbr.utils;
 
 import br.pucbr.controller.Console;
+import br.pucbr.model.Estoque;
 import br.pucbr.model.Historico;
 import br.pucbr.model.Item;
 import br.pucbr.model.Usuario;
 import br.pucbr.model.Venda;
+import br.pucbr.model.dao.EstoqueDAO;
 import br.pucbr.model.dao.HistoricoDAO;
+import br.pucbr.model.dao.ItemDAO;
 import br.pucbr.model.dao.VendaDAO;
 
 import java.util.Date;
@@ -13,23 +16,8 @@ import java.util.List;
 
 public class ComprarProduto {
 
-    public static boolean menuComprar(List<Item> itemList, Usuario usuarioLogado,
-                                      List<Historico> historicoSistema, ListaVenda listaVendas)
-            throws InterruptedException {
-        System.out.println("Itens na máquina:");
-        System.out.println("0 voltar ao menu anterior.");
-        for (Item item : itemList) {
-            System.out.println(item.getId() + " " + item.getDescricao() + ": R$ " + item.getValor());
-        }
-        int idProduto = Console.lerInt("Digite o código do produto: ");
-        if (idProduto == 0) {
-            System.out.println("Compra cancelada.");
-            return false;
-        }
-        return comprarProduto(itemList, idProduto, usuarioLogado, listaVendas, historicoSistema);
-    }
-
-//    public static boolean menuComprar(Usuario usuarioLogado)
+//    public static boolean menuComprar(List<Item> itemList, Usuario usuarioLogado,
+//                                      List<Historico> historicoSistema, ListaVenda listaVendas)
 //            throws InterruptedException {
 //        System.out.println("Itens na máquina:");
 //        System.out.println("0 voltar ao menu anterior.");
@@ -44,55 +32,78 @@ public class ComprarProduto {
 //        return comprarProduto(itemList, idProduto, usuarioLogado, listaVendas, historicoSistema);
 //    }
 
-    public static Integer comprarProduto(Item item, Usuario usuarioLogado) {
+
+    public static boolean menuComprar(Usuario usuarioLogado) {
+        System.out.println("Itens na máquina:");
+        System.out.println("0 voltar ao menu anterior.");
+        ItemDAO itemDAO = new ItemDAO();
+        List<Item> listItens = itemDAO.listar();
+        for (Item item : listItens) {
+            System.out.println(item.getId() + " " + item.getDescricao() + ": R$ " + item.getValor());
+        }
+
+        int idProdutoEscolhido = Console.lerInt("Digite o código do produto: ");
+        if (idProdutoEscolhido == 0) {
+            System.out.println("Compra cancelada.");
+            return false;
+        }
+
+        for (Item item : listItens) {
+            if (item.getId() == idProdutoEscolhido) {
+                if (item.getEstoque().getEstoqueAtual() > 0) {
+                    mostrarMenuFormaPagamento(item, usuarioLogado);
+//                    return comprarProduto(item, usuarioLogado);
+                } else {
+                    System.out.println("Estoque zerado");
+                }
+            }
+        }
+
+        System.out.println("Produto inválido");
+        return false;
+    }
+
+    private static void mostrarMenuFormaPagamento(Item item, Usuario usuarioLogado) {
+        int formaPagamento = Console.lerInt("Digite 1 para debitar do crédito e 2 para pagar via maquininha: ");
+        if (formaPagamento == 1) {
+//            return pagarViaCredito(usuarioLogado, item);
+
+        } else if (formaPagamento == 2) {
+            pagarViaMaquininha(usuarioLogado, item);
+
+        } else {
+            System.out.println("Forma de pagamento inválido");
+        }
+    }
+
+    public static Historico comprarProduto(Item item, Usuario usuarioLogado) {
+        EstoqueDAO estoqueDAO = new EstoqueDAO();
+        Estoque estoque = item.getEstoque();
+        estoque.setEstoqueAtual(estoque.getEstoqueAtual() - 1);
+        estoqueDAO.alterar(estoque);
         Date data = new Date();
         VendaDAO vendaDAO = new VendaDAO();
         Venda venda = vendaDAO.inserir(new Venda(new Date(), item.getValor(), item.getId(), item));
         HistoricoDAO historicoDAO = new HistoricoDAO();
-        historicoDAO.inserir(new Historico(usuarioLogado.getId(), venda.getId(), data, item.getValor()));
-        return venda.getId();
+        Historico historico = historicoDAO.inserir(new Historico(usuarioLogado.getId(), venda.getId(), data, item.getValor()));
+        return historico;
     }
 
-    public static boolean comprarProduto(List<Item> itemList, int idProduto, Usuario usuarioLogado,
-                                         ListaVenda listaVendas, List<Historico> historicoSistema)
-            throws InterruptedException {
-        int i = 0;
-        for (i = 0; i < itemList.size(); i++) {
-            Item item = itemList.get(i);
-            if (idProduto == item.getId()) {
-                if (existeItemNoEstoque(item)) {
-                    int formaPagamento = Console.lerInt("Digite 1 para debitar do crédito e 2 para pagar via maquininha: ");
-                    if (formaPagamento == 1) {
-                        return pagarViaCredito(usuarioLogado, item, listaVendas, historicoSistema);
-
-                    } else if (formaPagamento == 2) {
-                        pagarViaMaquininha(usuarioLogado, item, listaVendas, historicoSistema);
-
-                    } else {
-                        System.out.println("Forma de pagamento inválido");
-                        return false;
-                    }
-                }
-            }
+    public static void pagarViaMaquininha(Usuario usuarioLogado, Item item) {
+        try {
+            System.out.println("Total da compra: ");
+            Console.lerInt("Digite a senha: ");
+            System.out.println("Validando pagamento");
+            Thread.sleep(2000);
+            System.out.print(".");
+            Thread.sleep(2000);
+            System.out.print(".");
+            Thread.sleep(2000);
+            System.out.print(".");
+            comprarProduto(item, usuarioLogado);
+        } catch (Exception exc) {
+            System.out.println("Error to pay with machine: " + exc.getMessage());
         }
-        if (i == itemList.size()) {
-            System.out.println("Produto não encontrado: " + idProduto);
-        }
-        return false;
-    }
-
-    public static boolean pagarViaMaquininha(Usuario usuarioLogado, Item item, ListaVenda listaVendas, List<Historico> historicoSistema) throws InterruptedException {
-        System.out.println("Total da compra: ");
-        Console.lerInt("Digite a senha: ");
-        System.out.println("Validando pagamento");
-        Thread.sleep(2000);
-        System.out.print(".");
-        Thread.sleep(2000);
-        System.out.print(".");
-        Thread.sleep(2000);
-        System.out.print(".");
-        realizarCompra(item, usuarioLogado, listaVendas, historicoSistema);
-        return true;
     }
 
     public static boolean pagarViaCredito(Usuario usuarioLogado, Item item, ListaVenda listaVendas, List<Historico> historicoSistema) {
@@ -104,14 +115,6 @@ public class ComprarProduto {
             System.out.println("Saldo insuficiente!!!");
             return false;
         }
-    }
-
-    private static boolean existeItemNoEstoque(Item item) {
-        if (item.getEstoque().getEstoqueAtual() > 0) {
-            return true;
-        }
-
-        return false;
     }
 
     private static void realizarCompra(Item item, Usuario usuario, ListaVenda listaVendas, List<Historico> historicoSistema) {

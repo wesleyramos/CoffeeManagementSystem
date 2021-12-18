@@ -17,29 +17,40 @@ public class Estoque {
         this.estoqueMinimo = _estoqueMinimo;
     }
 
+    @Override
+    public String toString() {
+        return "Estoque{" +
+                "id=" + id +
+                ", estoqueAtual=" + estoqueAtual +
+                ", estoqueMinimo=" + estoqueMinimo +
+                '}';
+    }
+
     public int getId() {
         return id;
     }
 
-    public void setId(int id) { this.id = id; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public double getEstoqueAtual() {
         return estoqueAtual;
-    }
-
-    public double getEstoqueMinimo() {
-        return estoqueMinimo;
-    }
-
-    public void venderItem() {
-        this.estoqueAtual--;
     }
 
     public void setEstoqueAtual(double estoqueAtual) {
         this.estoqueAtual = estoqueAtual;
     }
 
+    public double getEstoqueMinimo() {
+        return estoqueMinimo;
+    }
+
     public void setEstoqueMinimo(double estoqueMinimo) {
         this.estoqueMinimo = estoqueMinimo;
+    }
+
+    public void venderItem() {
+        this.estoqueAtual--;
     }
 }

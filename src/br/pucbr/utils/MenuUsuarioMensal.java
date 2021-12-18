@@ -19,7 +19,7 @@ public class MenuUsuarioMensal {
                 System.out.println("\n\n");
                 switch (opcao) {
                     case 1:
-                        ComprarProduto.menuComprar(itemList, usuarioLogado, historicoSistema, listaVendas);
+//                        ComprarProduto.menuComprar(itemList, usuarioLogado, historicoSistema, listaVendas);
                         break;
                     case 3:
                         System.out.println("Usuário deslogado!");
