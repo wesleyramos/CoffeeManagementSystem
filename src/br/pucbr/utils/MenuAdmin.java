@@ -1,14 +1,7 @@
 package br.pucbr.utils;
 
 import br.pucbr.controller.Console;
-import br.pucbr.model.Credito;
-import br.pucbr.model.Estoque;
-import br.pucbr.model.Historico;
-import br.pucbr.model.Item;
-import br.pucbr.model.Usuario;
-import br.pucbr.model.UsuarioAdmin;
-import br.pucbr.model.UsuarioMensal;
-import br.pucbr.model.Venda;
+import br.pucbr.model.*;
 import br.pucbr.model.dao.CreditoDAO;
 import br.pucbr.model.dao.EstoqueDAO;
 import br.pucbr.model.dao.ItemDAO;
@@ -49,16 +42,16 @@ public class MenuAdmin {
                     System.out.println("Em contrução, volte mais tarde!");
                     break;
                 case 5:
-                    System.out.println("Em contrução, volte mais tarde!");
+                    AdicionarCredito.adicionarCredito(usuarioLogado);
                     break;
                 case 6:
-                    System.out.println("Em contrução, volte mais tarde!");
+                    System.out.println("Obrigado por utilizar nosso sistema!");
                     break;
                 default:
                     System.out.println("Opcao invalida");
             }
 
-        } while (opcao != 3);
+        } while (opcao != 6);
 
         return null;
     }
@@ -68,10 +61,10 @@ public class MenuAdmin {
         Usuario usuario = null;
         creditoDAO.inserir(creditoInserido);
         switch (tipo) {
-            case 0:
+            case 1:
                 usuario = new UsuarioMensal(nome, login, senha, creditoInserido);
                 break;
-            case 1:
+            case 2:
                 usuario = new UsuarioAdmin(nome, login, senha, creditoInserido);
                 break;
             default:
@@ -103,6 +96,7 @@ public class MenuAdmin {
     private static void menuAdmin(Usuario usuario) {
         System.out.println("\n\n===========================================");
         System.out.println("Admin: " + usuario.getNome() + " logado");
+        System.out.println("Creditos: " + usuario.getCredito().getValorTotal());
         System.out.println("===========================================");
         System.out.println("1 - Cadastrar usuário");
         System.out.println("2 - Cadastrar item");

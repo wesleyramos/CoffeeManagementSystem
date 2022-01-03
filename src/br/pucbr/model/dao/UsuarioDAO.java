@@ -140,13 +140,12 @@ public class UsuarioDAO implements InterfaceDAO {
 
                         Credito credito = new Credito(idCredito, valorTotal);
                         switch (tipo) {
-                            case 0:
+                            case 1:
                                 usuario = new UsuarioMensal(idUsuario, nome, login, senha, credito, tipo);
                                 break;
-                            case 1:
+                            case 2:
                                 usuario = new UsuarioAdmin(idUsuario, nome, login, senha, credito, tipo);
                                 break;
-                            case 2:
                             default:
                                 System.err.println("Tipo de usuario não mapeado.");
                         }

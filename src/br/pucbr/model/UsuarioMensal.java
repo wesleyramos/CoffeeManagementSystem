@@ -9,11 +9,11 @@ public class UsuarioMensal extends Usuario {
     }
 
     public UsuarioMensal(String nome, String senha, Credito credito) {
-        super(nome, senha, credito, 0);
+        super(nome, senha, credito, 1);
     }
 
     public UsuarioMensal(String nome, String usuario, String senha, Credito credito) {
-        super(nome, senha, usuario, credito, 0);
+        super(nome, usuario, senha, credito, 1);
     }
 
     public UsuarioMensal(int id, String nome, String senha, Credito credito) {

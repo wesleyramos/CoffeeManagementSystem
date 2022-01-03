@@ -16,7 +16,6 @@ public class VendaDAO implements InterfaceDAO {
 
     @Override
     public Venda inserir(Object _venda) {
-        System.out.println("venda: " + _venda);
         if (_venda instanceof Venda) {
             Venda venda = (Venda) _venda;
             try {

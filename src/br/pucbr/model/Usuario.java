@@ -60,6 +60,10 @@ public abstract class Usuario {
         return credito;
     }
 
+    public void setCredito(Credito credito) {
+        this.credito = credito;
+    }
+
     public String getNome() {
         return nome;
     }

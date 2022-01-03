@@ -10,11 +10,23 @@ public class Historico {
     private Date data;
     private double total;
 
+    private Usuario usuario;
+    private Venda venda;
+
     public Historico(int _usuarioId, int _vendaId, Date data, double _total) {
         this.usuarioId = _usuarioId;
         this.vendaId = _vendaId;
         this.data = data;
         this.total = _total;
+    }
+
+    public Historico(Date data, double total, Usuario _usuario, Venda venda) {
+        this.data = data;
+        this.total = total;
+        this.usuario = _usuario;
+        this.usuarioId = _usuario.getId();
+        this.venda = venda;
+        this.vendaId = venda.getId();
     }
 
     @Override
@@ -67,4 +79,12 @@ public class Historico {
     public void setTotal(double total) {
         this.total = total;
     }
+
+    public Usuario getUsuario() { return usuario; }
+
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+
+    public Venda getVenda() { return venda; }
+
+    public void setVenda(Venda venda) { this.venda = venda; }
 }

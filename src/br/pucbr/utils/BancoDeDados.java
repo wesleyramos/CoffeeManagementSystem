@@ -13,6 +13,10 @@ public class BancoDeDados {
     public static void criarTabelas() {
         criarTabelaUsuario();
         criarCredito();
+        criarTabelaEstoque();
+        criarTabelaHistorico();
+        criarTabelaItem();
+        criarTabelaVenda();
     }
 
     private static void criarCredito() {
@@ -50,6 +54,77 @@ public class BancoDeDados {
         }
     }
 
+    private static void criarTabelaEstoque() {
+        try {
+            Statement statement = BancoDeDados.conectar().createStatement();
+
+            if (statement != null) {
+                statement.execute("CREATE TABLE IF NOT EXISTS estoque( " +
+                        "id_estoque INTEGER NOT NULL UNIQUE" +
+                        ", estoque_atual NUMERIC NOT NULL" +
+                        ", estoque_minimo NUMERIC NOT NULL" +
+                        ", PRIMARY KEY('id_estoque' AUTOINCREMENT))");
+            }
+
+        } catch (SQLException sqlException) {
+            System.err.println("Erro ao criar tabela de estoque: " + sqlException.getMessage());
+        }
+    }
+
+    private static void criarTabelaHistorico() {
+        try {
+            Statement statement = BancoDeDados.conectar().createStatement();
+
+            if (statement != null) {
+                statement.execute("CREATE TABLE IF NOT EXISTS historico( " +
+                        "id_historico INTEGER NOT NULL UNIQUE" +
+                        ", id_usuario INTEGER NOT NULL" +
+                        ", id_venda INTEGER NOT NULL" +
+                        ", data DATE NOT NULL" +
+                        ", total NUMERIC NOT NULL" +
+                        ", PRIMARY KEY('id_historico' AUTOINCREMENT))");
+            }
+
+        } catch (SQLException sqlException) {
+            System.err.println("Erro ao criar tabela de historico: " + sqlException.getMessage());
+        }
+    }
+
+    private static void criarTabelaItem() {
+        try {
+            Statement statement = BancoDeDados.conectar().createStatement();
+
+            if (statement != null) {
+                statement.execute("CREATE TABLE IF NOT EXISTS item( " +
+                        "id_item INTEGER NOT NULL UNIQUE" +
+                        ", descricao TEXT NOT NULL" +
+                        ", valor NUMERIC NOT NULL" +
+                        ", id_estoque INTEGER NOT NULL" +
+                        ", PRIMARY KEY('id_item' AUTOINCREMENT))");
+            }
+
+        } catch (SQLException sqlException) {
+            System.err.println("Erro ao criar tabela de item: " + sqlException.getMessage());
+        }
+    }
+
+    private static void criarTabelaVenda() {
+        try {
+            Statement statement = BancoDeDados.conectar().createStatement();
+
+            if (statement != null) {
+                statement.execute("CREATE TABLE IF NOT EXISTS venda( " +
+                        "id_venda INTEGER NOT NULL UNIQUE" +
+                        ", data DATE NOT NULL" +
+                        ", total NUMERIC NOT NULL" +
+                        ", id_item INTEGER NOT NULL" +
+                        ", PRIMARY KEY('id_venda' AUTOINCREMENT))");
+            }
+
+        } catch (SQLException sqlException) {
+            System.err.println("Erro ao criar tabela de venda: " + sqlException.getMessage());
+        }
+    }
 
     public static Connection conectar() {
 

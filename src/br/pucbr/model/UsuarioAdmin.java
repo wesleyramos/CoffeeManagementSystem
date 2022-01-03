@@ -7,7 +7,7 @@ public class UsuarioAdmin extends Usuario {
     }
 
     public UsuarioAdmin(String nome, String usuario, String senha, Credito credito) {
-        super(nome, usuario, senha, credito, 1);
+        super(nome, usuario, senha, credito, 2);
     }
 
     public UsuarioAdmin(int id, String nome, String usuario, String senha, Credito credito, int tipo) {

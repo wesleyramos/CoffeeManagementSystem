@@ -19,7 +19,10 @@ public class MenuUsuarioMensal {
                 System.out.println("\n\n");
                 switch (opcao) {
                     case 1:
-//                        ComprarProduto.menuComprar(itemList, usuarioLogado, historicoSistema, listaVendas);
+                        ComprarProduto.menuComprar(usuarioLogado);
+                        break;
+                    case 2:
+                        AdicionarCredito.adicionarCredito(usuarioLogado);
                         break;
                     case 3:
                         System.out.println("Usuário deslogado!");
@@ -36,6 +39,7 @@ public class MenuUsuarioMensal {
     private static void mostrarMenuUsuarioMensal(Usuario usuarioLogado) {
         System.out.println("\n\n===========================================");
         System.out.println("Usuário: " + usuarioLogado.getNome() + " logado");
+        System.out.println("Creditos: " + usuarioLogado.getCredito().getValorTotal());
         System.out.println("===========================================");
         System.out.println("1 - Comprar produto");
         System.out.println("2 - Colocar crédito");

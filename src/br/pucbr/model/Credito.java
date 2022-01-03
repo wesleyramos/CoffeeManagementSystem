@@ -18,6 +18,10 @@ public class Credito {
         this.valorTotal = 0d;
     }
 
+    public Credito( double _valorToal) {
+        this.valorTotal = _valorToal;
+    }
+
     public Double getValorTotal() {
         return valorTotal;
     }
@@ -26,8 +30,8 @@ public class Credito {
         this.valorTotal = valorTotal;
     }
 
-    public void inserirCredito() {
-
+    public void inserirCredito( double creditoAdicional ) {
+        this.valorTotal += creditoAdicional;
     }
 
     public void pagarCompra(double valorPago) {
