@@ -1,12 +1,13 @@
 package br.pucbr.model.dao;
 
-import br.pucbr.model.Historico;
+import br.pucbr.model.*;
 import br.pucbr.utils.BancoDeDados;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HistoricoDAO implements InterfaceDAO {
@@ -94,6 +95,50 @@ public class HistoricoDAO implements InterfaceDAO {
                 }
 
             }
+
+        }
+
+        return null;
+    }
+
+    public List<Historico> buscarPorUsuario(String nomeUsuario) throws Exception {
+
+        if (nomeUsuario != null && !nomeUsuario.equalsIgnoreCase("")) {
+
+            PreparedStatement preparedStatement = BancoDeDados.conectar().prepareStatement("SELECT * FROM historico AS h " +
+                    "INNER JOIN usuario AS u " +
+                    "ON h.id_usuario = u.id_usuario " +
+                    "INNER JOIN venda AS v " +
+                    "ON h.id_venda = v.id_venda " +
+                    "INNER JOIN item AS i " +
+                    "ON v.id_item = i.id_item " +
+                    "WHERE u.usuario = ?;");
+            preparedStatement.setString(1, nomeUsuario);
+
+            ResultSet rs = preparedStatement.executeQuery();
+            List<Historico> historicos = new ArrayList<>();
+            while (rs.next()) {
+
+                Usuario usuario = null;
+                if( rs.getInt("tipo") == 1 ){
+                    usuario = new UsuarioMensal( rs.getInt("id_usuario"), rs.getString("nome")
+                            , rs.getString("usuario"), rs.getString("senha"), null, rs.getInt("tipo") );
+                }else{
+                    usuario = new UsuarioAdmin( rs.getInt("id_usuario"), rs.getString("nome")
+                            , rs.getString("usuario"), rs.getString("senha"), null, rs.getInt("tipo") );
+                }
+
+                Item item = new Item(rs.getInt("id_item"), rs.getString("descricao"), rs.getDouble("valor"), null);
+
+                Venda venda = new Venda(rs.getDate("data"), rs.getDouble("total"), item);
+                venda.setId(rs.getInt("id_venda"));
+
+                Historico historico = new Historico(rs.getDate("data"), rs.getDouble("total"), usuario, venda);
+
+                historicos.add(historico);
+            }
+
+            return historicos;
 
         }
 

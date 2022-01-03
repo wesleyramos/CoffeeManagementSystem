@@ -34,6 +34,7 @@ public class ComprarProduto {
                     if (mostrarMenuFormaPagamento(historico)) {
                         VendaDAO vendaDAO = new VendaDAO();
                         venda = vendaDAO.inserir(venda);
+                        historico.setVenda(venda);
                         HistoricoDAO historicoDAO = new HistoricoDAO();
                         historicoDAO.inserir(historico);
                         return true;

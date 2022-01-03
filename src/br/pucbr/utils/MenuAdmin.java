@@ -39,7 +39,8 @@ public class MenuAdmin {
                     ComprarProduto.menuComprar(usuarioLogado);
                     break;
                 case 4:
-                    System.out.println("Em contrução, volte mais tarde!");
+                    Historico historico = new Historico();
+                    historico.listarHistoricoPorUsuario(usuarioLogado.getUsuario());
                     break;
                 case 5:
                     AdicionarCredito.adicionarCredito(usuarioLogado);
