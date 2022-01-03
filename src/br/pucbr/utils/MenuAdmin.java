@@ -40,7 +40,13 @@ public class MenuAdmin {
                     break;
                 case 4:
                     Historico historico = new Historico();
-                    historico.listarHistoricoPorUsuario(usuarioLogado.getUsuario());
+                    String nomeUsuario = Console.lerString("Informe o nome do usuario: ");
+                    if (!nomeUsuario.equalsIgnoreCase("")) {
+                        historico.listarHistoricoPorUsuario(nomeUsuario);
+                    }else{
+                        System.err.println("Usuario invalido!");
+                    }
+
                     break;
                 case 5:
                     AdicionarCredito.adicionarCredito(usuarioLogado);
