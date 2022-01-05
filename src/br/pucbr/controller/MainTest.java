@@ -1,11 +1,8 @@
 package br.pucbr.controller;
 
 import br.pucbr.model.Historico;
-import br.pucbr.model.Item;
 import br.pucbr.model.Usuario;
-import br.pucbr.model.Venda;
-import br.pucbr.model.dao.ItemDAO;
-import br.pucbr.model.dao.VendaDAO;
+import br.pucbr.model.dao.HistoricoDAO;
 import br.pucbr.utils.BancoDeDados;
 import br.pucbr.utils.ComprarProduto;
 import br.pucbr.utils.Login;
@@ -19,6 +16,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -86,26 +84,43 @@ public class MainTest {
         assertNotNull(id_item);
     }
 
-
     @Test
-    public void test06_ComprarComMaquininha() {
+    public void test08_ComprarProdutoQueNãoExiste() throws Exception {
         Usuario usuario = Login.efetuarLogin("admin", "admin");
-        ItemDAO itemDAO = new ItemDAO();
-        List<Item> itens = itemDAO.buscarPorDescricao("desc1");
-        Historico historico = ComprarProduto.comprarProduto(itens.get(0), usuario);
-        System.out.println(historico);
-        assertEquals(1, historico.getId());
-        assertEquals(1, historico.getUsuarioId());
-        assertEquals(1, historico.getVendaId());
-        assertEquals(4d, historico.getTotal());
-        VendaDAO vendaDAO = new VendaDAO();
-        List<Venda> vendas = vendaDAO.buscar(historico.getVendaId());
-        Venda venda = vendas.get(0);
-        System.out.println("venda: " + venda);
-        assertEquals(4d, venda.getTotal());
-
-//        assertNotNull(id_venda);
+        boolean result = ComprarProduto.comprarItem(-1, usuario);
+        assertFalse(result);
     }
+
+//    @Test
+//    public void test09_ComprarProdutoSemEstoque() throws Exception {
+//        Integer id_item = MenuAdmin.cadastrarItem("desc1", 4d, 0d, 1d);
+//        assertNotNull(id_item);
+//        Usuario usuario = Login.efetuarLogin("admin", "admin");
+//        boolean result = ComprarProduto.comprarItem(4, usuario);
+//        HistoricoDAO historicoDAO = new HistoricoDAO();
+//        List<Historico> admin = historicoDAO.buscarPorUsuario("admin");
+//        assertFalse(result);
+//    }
+
+//    @Test
+//    public void test08_ComprarComMaquininha() {
+//        Usuario usuario = Login.efetuarLogin("admin", "admin");
+//        ItemDAO itemDAO = new ItemDAO();
+//        List<Item> itens = itemDAO.buscarPorDescricao("desc1");
+//        Historico historico = ComprarProduto.comprarProduto(itens.get(0), usuario);
+//        System.out.println(historico);
+//        assertEquals(1, historico.getId());
+//        assertEquals(1, historico.getUsuarioId());
+//        assertEquals(1, historico.getVendaId());
+//        assertEquals(4d, historico.getTotal());
+//        VendaDAO vendaDAO = new VendaDAO();
+//        List<Venda> vendas = vendaDAO.buscar(historico.getVendaId());
+//        Venda venda = vendas.get(0);
+//        System.out.println("venda: " + venda);
+//        assertEquals(4d, venda.getTotal());
+//
+////        assertNotNull(id_venda);
+//    }
 
 
 //    @Test

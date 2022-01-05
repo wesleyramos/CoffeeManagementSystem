@@ -10,7 +10,7 @@ public class Main {
 
     private static Usuario usuarioLogado = null;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         BancoDeDados.criarTabelas();
 
         int opcao = 0;

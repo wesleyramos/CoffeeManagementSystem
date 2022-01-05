@@ -1,8 +1,16 @@
 package br.pucbr.utils;
 
 import br.pucbr.controller.Console;
-import br.pucbr.model.*;
-import br.pucbr.model.dao.*;
+import br.pucbr.model.Estoque;
+import br.pucbr.model.Historico;
+import br.pucbr.model.Item;
+import br.pucbr.model.Usuario;
+import br.pucbr.model.Venda;
+import br.pucbr.model.dao.CreditoDAO;
+import br.pucbr.model.dao.EstoqueDAO;
+import br.pucbr.model.dao.HistoricoDAO;
+import br.pucbr.model.dao.ItemDAO;
+import br.pucbr.model.dao.VendaDAO;
 
 import java.util.Date;
 import java.util.List;
@@ -10,13 +18,7 @@ import java.util.List;
 public class ComprarProduto {
 
     public static boolean menuComprar(Usuario usuarioLogado) {
-        System.out.println("Itens na máquina:");
-        System.out.println("0 voltar ao menu anterior.");
-        ItemDAO itemDAO = new ItemDAO();
-        List<Item> listItens = itemDAO.listar();
-        for (Item item : listItens) {
-            System.out.println(item.getId() + " " + item.getDescricao() + ": R$ " + item.getValor());
-        }
+        mostrarItens();
 
         int idProdutoEscolhido = Console.lerInt("Digite o código do produto: ");
         if (idProdutoEscolhido == 0) {
@@ -24,6 +26,13 @@ public class ComprarProduto {
             return false;
         }
 
+        return comprarItem(idProdutoEscolhido, usuarioLogado);
+
+    }
+
+    public static boolean comprarItem(int idProdutoEscolhido, Usuario usuarioLogado) {
+        ItemDAO itemDAO = new ItemDAO();
+        List<Item> listItens = itemDAO.listar();
         for (Item item : listItens) {
             if (item.getId() == idProdutoEscolhido) {
                 if (item.getEstoque().getEstoqueAtual() > 0) {
@@ -38,16 +47,30 @@ public class ComprarProduto {
                         HistoricoDAO historicoDAO = new HistoricoDAO();
                         historicoDAO.inserir(historico);
                         return true;
+                    } else {
+                        return false;
                     }
 
                 } else {
                     System.out.println("Item " + item.getDescricao() + " em falta.");
+                    return false;
                 }
             }
         }
 
         System.out.println("Produto inválido");
         return false;
+    }
+
+    private static void mostrarItens() {
+        ItemDAO itemDAO = new ItemDAO();
+        List<Item> listItens = itemDAO.listar();
+        System.out.println("Itens na máquina:");
+        System.out.println("0 voltar ao menu anterior.");
+        for (Item item : listItens) {
+            System.out.println(item.getId() + " " + item.getDescricao() + ": R$ " + item.getValor());
+        }
+
     }
 
     private static boolean mostrarMenuFormaPagamento(Historico historico) {
@@ -57,16 +80,22 @@ public class ComprarProduto {
 
             if (historico.getUsuario().getCredito().getValorTotal() < historico.getVenda().getItem().getValor()) {
                 System.out.println("Saldo insuficiente!!!");
-                try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 mostrarMenuFormaPagamento(historico);
             }
 
             return pagarViaCredito(historico.getUsuario(), historico.getVenda().getItem());
         } else if (formaPagamento == 2) {
             return pagarViaMaquininha(historico.getUsuario(), historico.getVenda().getItem());
+        } else {
+            System.out.println("Método de pagamento inválido");
+            return false;
         }
 
-        return false;
     }
 
     public static Historico comprarProduto(Item item, Usuario usuarioLogado) {

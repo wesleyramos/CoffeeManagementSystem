@@ -18,10 +18,17 @@ public class MenuAdmin {
     private static CreditoDAO creditoDAO = new CreditoDAO();
     private static UsuarioDAO usuarioDAO = new UsuarioDAO();
 
-    public static Usuario mostrar(Usuario usuarioLogado) {
+    public static Usuario mostrar(Usuario usuarioLogado) throws InterruptedException {
         int opcao;
 
         do {
+            Thread.sleep(1000);
+            System.out.print(".");
+            Thread.sleep(1000);
+            System.out.print(".");
+            Thread.sleep(1000);
+            System.out.print(".");
+            System.out.println();
             menuAdmin(usuarioLogado);
             opcao = Console.lerInt("Escolha uma opcao:");
             switch (opcao) {
@@ -30,7 +37,7 @@ public class MenuAdmin {
                     String login = Console.lerString("Login:");
                     String senha = Console.lerString("Senha:");
                     int tipo = Console.lerInt("Tipo: 1 - Mensal, 2 - Admin");
-                    int id_usuario = cadastrarUsuario(nome, login, senha, tipo);
+                    cadastrarUsuario(nome, login, senha, tipo);
                     break;
                 case 2:
                     String desc = Console.lerString("Descricao:");

@@ -6,10 +6,17 @@ import br.pucbr.model.UsuarioMensal;
 
 public class MenuUsuarioMensal {
 
-    public static Usuario mostrar(Usuario usuarioLogado) {
+    public static Usuario mostrar(Usuario usuarioLogado) throws InterruptedException {
         int opcao;
         if (usuarioLogado instanceof UsuarioMensal) {
             do {
+                Thread.sleep(1000);
+                System.out.print(".");
+                Thread.sleep(1000);
+                System.out.print(".");
+                Thread.sleep(1000);
+                System.out.print(".");
+                System.out.println();
                 mostrarMenuUsuarioMensal(usuarioLogado);
                 opcao = Console.lerInt("Escolha uma opcao:");
                 System.out.println("\n\n");

@@ -22,7 +22,7 @@ O sistema possui dois tipo de usuários: mensal e admin.
 - [x] Login
 - [x] Cadastrar usuário: Os campos pedidos são nome, usuário, senha e o tipo de usuário (1 mensal e 2 admin).
 - [x] Cadastrar item: Os campos pedidos são descrição, valor, estoque atual e estoque mínimo.
-- [ ] Comprar produto
+- [ ] Comprar produto: 0 para voltar ao menu anterior ou digitar o número do respectivo item a ser comprado.
 - [ ] Imprimir histórico das vendas na máquina
 - [ ] Colocar crédito
 - [ ] Deslogar do sistema

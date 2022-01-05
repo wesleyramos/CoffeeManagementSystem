@@ -29,10 +29,18 @@ public class BancoDeDados {
         criarTabelaVenda();
         criarUsuarioAdmin();
         criarUsuarioMensal();
-        criarCafe();
+        criarCafe_com_estoque();
+        criarCappucino_sem_estoque();
     }
 
-    private static void criarCafe() {
+    private static void criarCappucino_sem_estoque() {
+        ItemDAO itemDAO = new ItemDAO();
+        EstoqueDAO estoqueDAO = new EstoqueDAO();
+        Item item = new Item("cappuccino", 1d, estoqueDAO.inserir(new Estoque(0f, 5f)));
+        itemDAO.inserir(item);
+    }
+
+    private static void criarCafe_com_estoque() {
         ItemDAO itemDAO = new ItemDAO();
         EstoqueDAO estoqueDAO = new EstoqueDAO();
         Item item = new Item("café extra forte", 1d, estoqueDAO.inserir(new Estoque(10f, 10f)));
