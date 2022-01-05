@@ -1,5 +1,15 @@
 package br.pucbr.utils;
 
+import br.pucbr.model.Credito;
+import br.pucbr.model.Estoque;
+import br.pucbr.model.Item;
+import br.pucbr.model.UsuarioAdmin;
+import br.pucbr.model.UsuarioMensal;
+import br.pucbr.model.dao.CreditoDAO;
+import br.pucbr.model.dao.EstoqueDAO;
+import br.pucbr.model.dao.ItemDAO;
+import br.pucbr.model.dao.UsuarioDAO;
+
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,6 +27,30 @@ public class BancoDeDados {
         criarTabelaHistorico();
         criarTabelaItem();
         criarTabelaVenda();
+        criarUsuarioAdmin();
+        criarUsuarioMensal();
+        criarCafe();
+    }
+
+    private static void criarCafe() {
+        ItemDAO itemDAO = new ItemDAO();
+        EstoqueDAO estoqueDAO = new EstoqueDAO();
+        Item item = new Item("café extra forte", 1d, estoqueDAO.inserir(new Estoque(10f, 10f)));
+        itemDAO.inserir(item);
+    }
+
+    private static void criarUsuarioMensal() {
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        Credito credito = new Credito(0d);
+        CreditoDAO creditoDAO = new CreditoDAO();
+        usuarioDAO.inserir(new UsuarioMensal("usuario", "usuario", "usuario", creditoDAO.inserir(credito)));
+    }
+
+    private static void criarUsuarioAdmin() {
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        Credito credito = new Credito(0d);
+        CreditoDAO creditoDAO = new CreditoDAO();
+        usuarioDAO.inserir(new UsuarioAdmin("admin", "admin", "admin", creditoDAO.inserir(credito)));
     }
 
     private static void criarCredito() {

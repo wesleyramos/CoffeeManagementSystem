@@ -1,13 +1,10 @@
 package br.pucbr.controller;
 
-import br.pucbr.model.Credito;
 import br.pucbr.model.Historico;
 import br.pucbr.model.Item;
 import br.pucbr.model.Usuario;
-import br.pucbr.model.UsuarioAdmin;
 import br.pucbr.model.Venda;
 import br.pucbr.model.dao.ItemDAO;
-import br.pucbr.model.dao.UsuarioDAO;
 import br.pucbr.model.dao.VendaDAO;
 import br.pucbr.utils.BancoDeDados;
 import br.pucbr.utils.ComprarProduto;
@@ -24,12 +21,15 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class MainTest {
 
     @BeforeAll
     public static void setupDB() {
+        BancoDeDados.droparBase();
         BancoDeDados.criarTabelas();
     }
 
@@ -40,37 +40,55 @@ public class MainTest {
 
     @Test
     public void test01_LoginFail() {
-        Usuario usuario = Login.efetuarLogin("admin", "admin");
+        Usuario usuario = Login.efetuarLogin("admin1", "admin1");
         assertNull(usuario);
     }
 
     @Test
-    public void test02_LoginSucesso() {
-        UsuarioAdmin admin = new UsuarioAdmin("admin", "admin", "admin", new Credito(0d));
-        UsuarioDAO usuarioDAO = new UsuarioDAO();
-        usuarioDAO.inserir(admin);
-
+    public void test02_LoginAdminComSucesso() {
         Usuario usuario = Login.efetuarLogin("admin", "admin");
-
-
         assertEquals("admin", usuario.getUsuario());
     }
 
     @Test
-    public void test03_CadastrarUsuarioWesley() {
-        int idUsuario = MenuAdmin.cadastrarUsuario("wesley", "wesley", "wesley", 0);
+    public void test03_LoginMensalComSucesso() {
+        Usuario usuario = Login.efetuarLogin("usuario", "usuario");
+        assertEquals("usuario", usuario.getUsuario());
+    }
+
+    @Test
+    public void test04_CadastrarUsuarioDeTipoInexistente() {
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            MenuAdmin.cadastrarUsuario("wesley", "wesley", "wesley", 0);
+        });
+
+        String expectedMessage = "Tipo de usuario invalido: 0";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    public void test05_CadastrarUsuarioMensalWesley() {
+        int idUsuario = MenuAdmin.cadastrarUsuario("wesley", "wesley", "wesley", 1);
         assertNotNull(idUsuario);
     }
 
     @Test
-    public void test04_CadastrarProduto() {
+    public void test06_CadastrarUsuarioAdminTeste123() {
+        int idUsuario = MenuAdmin.cadastrarUsuario("teste123", "teste123", "teste123", 2);
+        assertNotNull(idUsuario);
+    }
+
+    @Test
+    public void test07_CadastrarProduto() {
         Integer id_item = MenuAdmin.cadastrarItem("desc1", 4d, 1d, 1d);
         assertNotNull(id_item);
     }
 
 
     @Test
-    public void test05_ComprarComMaquininha() {
+    public void test06_ComprarComMaquininha() {
         Usuario usuario = Login.efetuarLogin("admin", "admin");
         ItemDAO itemDAO = new ItemDAO();
         List<Item> itens = itemDAO.buscarPorDescricao("desc1");

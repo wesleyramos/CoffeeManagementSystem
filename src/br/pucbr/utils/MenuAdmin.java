@@ -1,25 +1,29 @@
 package br.pucbr.utils;
 
 import br.pucbr.controller.Console;
-import br.pucbr.model.*;
+import br.pucbr.model.Credito;
+import br.pucbr.model.Estoque;
+import br.pucbr.model.Historico;
+import br.pucbr.model.Item;
+import br.pucbr.model.Usuario;
+import br.pucbr.model.UsuarioAdmin;
+import br.pucbr.model.UsuarioMensal;
+import br.pucbr.model.Venda;
 import br.pucbr.model.dao.CreditoDAO;
 import br.pucbr.model.dao.EstoqueDAO;
 import br.pucbr.model.dao.ItemDAO;
 import br.pucbr.model.dao.UsuarioDAO;
 
-import java.util.List;
-
 public class MenuAdmin {
     private static CreditoDAO creditoDAO = new CreditoDAO();
     private static UsuarioDAO usuarioDAO = new UsuarioDAO();
 
-    public static Usuario mostrar(Usuario usuarioLogado, List<Item> itemList, List<Historico> historicoSistema, ListaVenda listaVendas) throws InterruptedException {
+    public static Usuario mostrar(Usuario usuarioLogado) {
         int opcao;
 
         do {
             menuAdmin(usuarioLogado);
             opcao = Console.lerInt("Escolha uma opcao:");
-            System.out.println("\n\n");
             switch (opcao) {
                 case 1:
                     String nome = Console.lerString("Nome:");
@@ -43,7 +47,7 @@ public class MenuAdmin {
                     String nomeUsuario = Console.lerString("Informe o nome do usuario: ");
                     if (!nomeUsuario.equalsIgnoreCase("")) {
                         historico.listarHistoricoPorUsuario(nomeUsuario);
-                    }else{
+                    } else {
                         System.err.println("Usuario invalido!");
                     }
 
@@ -53,6 +57,7 @@ public class MenuAdmin {
                     break;
                 case 6:
                     System.out.println("Obrigado por utilizar nosso sistema!");
+                    usuarioLogado = null;
                     break;
                 default:
                     System.out.println("Opcao invalida");
@@ -76,6 +81,7 @@ public class MenuAdmin {
                 break;
             default:
                 System.out.println("Tipo de usuário inválido: " + tipo);
+                throw new RuntimeException("Tipo de usuario invalido: " + tipo);
         }
         usuarioDAO.inserir(usuario);
 
@@ -101,8 +107,8 @@ public class MenuAdmin {
     }
 
     private static void menuAdmin(Usuario usuario) {
-        System.out.println("\n\n===========================================");
-        System.out.println("Admin: " + usuario.getNome() + " logado");
+        System.out.println("===========================================");
+        System.out.println("Tipo Admin: " + usuario.getNome() + " logado");
         System.out.println("Creditos: " + usuario.getCredito().getValorTotal());
         System.out.println("===========================================");
         System.out.println("1 - Cadastrar usuário");

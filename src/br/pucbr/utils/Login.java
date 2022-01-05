@@ -6,6 +6,7 @@ import br.pucbr.model.dao.UsuarioDAO;
 public class Login {
 
     private static UsuarioDAO usuarioDAO = new UsuarioDAO();
+
     public static Usuario efetuarLogin(String usuario, String senha) {
 
         Usuario usuarioVerificado = usuarioDAO.buscarPorUsuario(usuario);

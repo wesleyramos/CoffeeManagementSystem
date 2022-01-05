@@ -1,7 +1,6 @@
 package br.pucbr.controller;
 
 import br.pucbr.model.Usuario;
-import br.pucbr.model.dao.UsuarioDAO;
 import br.pucbr.utils.BancoDeDados;
 import br.pucbr.utils.Login;
 import br.pucbr.utils.MenuAdmin;
@@ -9,16 +8,10 @@ import br.pucbr.utils.MenuUsuarioMensal;
 
 public class Main {
 
-    private static UsuarioDAO usuarioDAO = new UsuarioDAO();
-
     private static Usuario usuarioLogado = null;
 
     public static void main(String[] args) {
         BancoDeDados.criarTabelas();
-
-//        Credito credito = new Credito(0d);
-//        CreditoDAO creditoDAO = new CreditoDAO();
-//        usuarioDAO.inserir(new UsuarioAdmin("admin", "admin", "admin", creditoDAO.inserir(credito)));
 
         int opcao = 0;
         do {
@@ -33,17 +26,11 @@ public class Main {
             } else {
                 switch (usuarioLogado.getTipo()) {
                     case 1:
-                        try {
-                            usuarioLogado = MenuUsuarioMensal.mostrar(usuarioLogado, null, null, null);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                        usuarioLogado = MenuUsuarioMensal.mostrar(usuarioLogado);
+                        break;
                     case 2:
-                        try {
-                            usuarioLogado = MenuAdmin.mostrar(usuarioLogado, null, null, null);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                        usuarioLogado = MenuAdmin.mostrar(usuarioLogado);
+                        break;
                 }
             }
         } while (opcao != 8);

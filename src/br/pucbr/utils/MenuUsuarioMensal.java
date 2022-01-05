@@ -1,16 +1,12 @@
 package br.pucbr.utils;
 
 import br.pucbr.controller.Console;
-import br.pucbr.model.Historico;
-import br.pucbr.model.Item;
 import br.pucbr.model.Usuario;
 import br.pucbr.model.UsuarioMensal;
 
-import java.util.List;
-
 public class MenuUsuarioMensal {
 
-    public static Usuario mostrar(Usuario usuarioLogado, List<Item> itemList, List<Historico> historicoSistema, ListaVenda listaVendas) throws InterruptedException {
+    public static Usuario mostrar(Usuario usuarioLogado) {
         int opcao;
         if (usuarioLogado instanceof UsuarioMensal) {
             do {
@@ -26,6 +22,7 @@ public class MenuUsuarioMensal {
                         break;
                     case 3:
                         System.out.println("Usuário deslogado!");
+                        usuarioLogado = null;
                         break;
                     default:
                         System.out.println("Opcao invalida");
@@ -37,7 +34,7 @@ public class MenuUsuarioMensal {
     }
 
     private static void mostrarMenuUsuarioMensal(Usuario usuarioLogado) {
-        System.out.println("\n\n===========================================");
+        System.out.println("===========================================");
         System.out.println("Usuário: " + usuarioLogado.getNome() + " logado");
         System.out.println("Creditos: " + usuarioLogado.getCredito().getValorTotal());
         System.out.println("===========================================");
