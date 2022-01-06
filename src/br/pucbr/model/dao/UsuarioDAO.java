@@ -27,7 +27,9 @@ public class UsuarioDAO implements InterfaceDAO {
 
                 if (statement != null) {
                     PreparedStatement preparedStatement = BancoDeDados.conectar()
-                            .prepareStatement("INSERT INTO usuario(nome, usuario, senha, id_credito, tipo) VALUES (?,?,?,?,?)");
+                            .prepareStatement("INSERT " +
+                                    "INTO usuario(nome, usuario, senha, id_credito, tipo) " +
+                                    "VALUES (?,?,?,?,?)");
 
                     preparedStatement.setString(1, usuario.getNome());
                     preparedStatement.setString(2, usuario.getUsuario());

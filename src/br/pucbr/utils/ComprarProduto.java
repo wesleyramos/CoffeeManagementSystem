@@ -26,38 +26,27 @@ public class ComprarProduto {
             return false;
         }
 
-        return comprarItem(idProdutoEscolhido, usuarioLogado);
+        return tentarComprar(idProdutoEscolhido, usuarioLogado);
 
     }
 
-    public static boolean comprarItem(int idProdutoEscolhido, Usuario usuarioLogado) {
+    public static boolean tentarComprar(int idProdutoEscolhido, Usuario usuarioLogado) {
         ItemDAO itemDAO = new ItemDAO();
         List<Item> listItens = itemDAO.listar();
         for (Item item : listItens) {
             if (item.getId() == idProdutoEscolhido) {
                 if (item.getEstoque().getEstoqueAtual() > 0) {
-
-                    Venda venda = new Venda(new Date(), item.getValor(), item);
-                    Historico historico = new Historico(venda.getData(), item.getValor(), usuarioLogado, venda);
-
-                    if (mostrarMenuFormaPagamento(historico)) {
-                        VendaDAO vendaDAO = new VendaDAO();
-                        venda = vendaDAO.inserir(venda);
-                        historico.setVenda(venda);
-                        HistoricoDAO historicoDAO = new HistoricoDAO();
-                        historicoDAO.inserir(historico);
+                    if (mostrarMenuFormaPagamento(usuarioLogado, item)) {
                         return true;
                     } else {
                         return false;
                     }
-
                 } else {
                     System.out.println("Item " + item.getDescricao() + " em falta.");
                     return false;
                 }
             }
         }
-
         System.out.println("Produto inválido");
         return false;
     }
@@ -73,24 +62,14 @@ public class ComprarProduto {
 
     }
 
-    private static boolean mostrarMenuFormaPagamento(Historico historico) {
+    private static boolean mostrarMenuFormaPagamento(Usuario usuario, Item item) {
         int formaPagamento = Console.lerInt("Forma de pagamento: \n 1 para debitar do crédito \n 2 para pagar via cartão: ");
 
         if (formaPagamento == 1) {
 
-            if (historico.getUsuario().getCredito().getValorTotal() < historico.getVenda().getItem().getValor()) {
-                System.out.println("Saldo insuficiente!!!");
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                mostrarMenuFormaPagamento(historico);
-            }
-
-            return pagarViaCredito(historico.getUsuario(), historico.getVenda().getItem());
+            return pagarViaCredito(usuario, item);
         } else if (formaPagamento == 2) {
-            return pagarViaMaquininha(historico.getUsuario(), historico.getVenda().getItem());
+            return pagarViaMaquininha(usuario, item);
         } else {
             System.out.println("Método de pagamento inválido");
             return false;
@@ -146,7 +125,7 @@ public class ComprarProduto {
                 System.err.println("Falha ao descontar o credito. " + e.getMessage());
             }
 
-            atualizarEstoque(item);
+            comprarProduto(item, usuarioLogado);
 
             System.out.println("Credito debitado: " + item.getValor());
             System.out.println("Saldo: R$ " + usuarioLogado.getCredito().getValorTotal());

@@ -36,6 +36,16 @@ public class Historico {
         this.vendaId = _venda.getId();
     }
 
+    public Historico(int id, java.sql.Date data, double total, Usuario usuario, Venda venda) {
+        this.id = id;
+        this.data = data;
+        this.total = total;
+        this.usuario = usuario;
+        this.usuarioId = usuario.getId();
+        this.venda = venda;
+        this.vendaId = venda.getId();
+    }
+
     public void listarHistoricoPorUsuario(String usuario) {
         HistoricoDAO historicoDAO = new HistoricoDAO();
         try {

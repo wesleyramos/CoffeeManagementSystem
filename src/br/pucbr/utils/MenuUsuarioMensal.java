@@ -19,13 +19,12 @@ public class MenuUsuarioMensal {
                 System.out.println();
                 mostrarMenuUsuarioMensal(usuarioLogado);
                 opcao = Console.lerInt("Escolha uma opcao:");
-                System.out.println("\n\n");
                 switch (opcao) {
                     case 1:
                         ComprarProduto.menuComprar(usuarioLogado);
                         break;
                     case 2:
-                        AdicionarCredito.adicionarCredito(usuarioLogado);
+                        AdicionarCredito.executar(usuarioLogado);
                         break;
                     case 3:
                         System.out.println("Usuário deslogado!");

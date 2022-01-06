@@ -7,10 +7,13 @@ import br.pucbr.model.dao.CreditoDAO;
 
 public class AdicionarCredito {
 
-    public static void adicionarCredito(Usuario usuario) {
+    public static void executar(Usuario usuario) {
         mostrarMenuCreditoAdicional(usuario);
         double valor = Console.lerInt("Informe o valor do credito adicional:");
+        adicionarCredito(valor, usuario);
+    }
 
+    public static void adicionarCredito(double valor, Usuario usuario) {
         try {
             CreditoDAO creditoDAO = new CreditoDAO();
             Credito credito = usuario.getCredito();
@@ -20,12 +23,11 @@ public class AdicionarCredito {
         } catch (Exception e) {
             System.err.println("Erro ao adicionar credito: " + e.getMessage());
         }
-
     }
 
     private static void mostrarMenuCreditoAdicional(Usuario usuarioLogado) {
 
-        System.out.println("\n\n===========================================");
+        System.out.println("===========================================");
         System.out.println("Usuário: " + usuarioLogado.getNome() + " logado");
 
         if (usuarioLogado.getCredito() != null) {

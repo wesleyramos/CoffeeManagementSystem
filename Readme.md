@@ -22,16 +22,16 @@ O sistema possui dois tipo de usuários: mensal e admin.
 - [x] Login
 - [x] Cadastrar usuário: Os campos pedidos são nome, usuário, senha e o tipo de usuário (1 mensal e 2 admin).
 - [x] Cadastrar item: Os campos pedidos são descrição, valor, estoque atual e estoque mínimo.
-- [ ] Comprar produto: 0 para voltar ao menu anterior ou digitar o número do respectivo item a ser comprado.
-- [ ] Imprimir histórico das vendas na máquina
-- [ ] Colocar crédito
-- [ ] Deslogar do sistema
+- [x] Comprar produto: 0 para voltar ao menu anterior ou digitar o número do respectivo item a ser comprado.
+- [x] Imprimir histórico das vendas na máquina
+- [x] Colocar crédito, coloca crédito no usuario logado
+- [x] Deslogar do sistema, sai da tela do usuário e permite outro usuário logar
 
 ### Usuário mensal
 O usuário mensal é aquele que irá utilizar a máquina de café de forma limitada ao consumo.
 Ele terá acesso a seguintes funcionalidades:
 - [x] Login
-- [ ] Comprar produto
-- [ ] Colocar crédito
-- [ ] Deslogar do sistema
+- [x] Comprar produto: 0 para voltar ao menu anterior ou digitar o número do respectivo item a ser comprado.
+- [x] Colocar crédito, coloca crédito no usuario logado
+- [x] Deslogar do sistema, sai da tela do usuário e permite outro usuário logar
 

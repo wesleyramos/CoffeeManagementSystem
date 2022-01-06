@@ -1,8 +1,11 @@
 package br.pucbr.controller;
 
 import br.pucbr.model.Historico;
+import br.pucbr.model.Item;
 import br.pucbr.model.Usuario;
 import br.pucbr.model.dao.HistoricoDAO;
+import br.pucbr.model.dao.ItemDAO;
+import br.pucbr.utils.AdicionarCredito;
 import br.pucbr.utils.BancoDeDados;
 import br.pucbr.utils.ComprarProduto;
 import br.pucbr.utils.Login;
@@ -85,67 +88,94 @@ public class MainTest {
     }
 
     @Test
-    public void test08_ComprarProdutoQueNãoExiste() throws Exception {
+    public void test08_TentarComprarProdutoQueNãoExiste() {
         Usuario usuario = Login.efetuarLogin("admin", "admin");
-        boolean result = ComprarProduto.comprarItem(-1, usuario);
+        boolean result = ComprarProduto.tentarComprar(-1, usuario);
         assertFalse(result);
     }
 
-//    @Test
-//    public void test09_ComprarProdutoSemEstoque() throws Exception {
-//        Integer id_item = MenuAdmin.cadastrarItem("desc1", 4d, 0d, 1d);
-//        assertNotNull(id_item);
-//        Usuario usuario = Login.efetuarLogin("admin", "admin");
-//        boolean result = ComprarProduto.comprarItem(4, usuario);
-//        HistoricoDAO historicoDAO = new HistoricoDAO();
-//        List<Historico> admin = historicoDAO.buscarPorUsuario("admin");
-//        assertFalse(result);
-//    }
+    @Test
+    public void test09_TentarComprarProdutoSemEstoque() {
+        Integer id_item = MenuAdmin.cadastrarItem("produto0estoque", 4d, 0d, 1d);
+        assertNotNull(id_item);
+        Usuario usuario = Login.efetuarLogin("admin", "admin");
+        boolean result = ComprarProduto.tentarComprar(id_item, usuario);
+        assertFalse(result);
+    }
 
-//    @Test
-//    public void test08_ComprarComMaquininha() {
-//        Usuario usuario = Login.efetuarLogin("admin", "admin");
-//        ItemDAO itemDAO = new ItemDAO();
-//        List<Item> itens = itemDAO.buscarPorDescricao("desc1");
-//        Historico historico = ComprarProduto.comprarProduto(itens.get(0), usuario);
-//        System.out.println(historico);
-//        assertEquals(1, historico.getId());
-//        assertEquals(1, historico.getUsuarioId());
-//        assertEquals(1, historico.getVendaId());
-//        assertEquals(4d, historico.getTotal());
-//        VendaDAO vendaDAO = new VendaDAO();
-//        List<Venda> vendas = vendaDAO.buscar(historico.getVendaId());
-//        Venda venda = vendas.get(0);
-//        System.out.println("venda: " + venda);
-//        assertEquals(4d, venda.getTotal());
-//
-////        assertNotNull(id_venda);
-//    }
+    @Test
+    public void test10_PagarViaCreditoSemSaldo() {
+        Integer id_item = MenuAdmin.cadastrarItem("cafe fraco", 40000d, 10d, 1d);
+        ItemDAO itemDAO = new ItemDAO();
+        List<Item> itens = itemDAO.buscarPorDescricao("cafe fraco");
+        assertNotNull(id_item);
+        Usuario usuario = Login.efetuarLogin("admin", "admin");
+        boolean result = ComprarProduto.pagarViaCredito(usuario, itens.get(0));
+        assertFalse(result);
+    }
 
+    @Test
+    public void test11_PagarViaCreditoComSaldo() {
+        Integer id_item = MenuAdmin.cadastrarItem("cafe tipo 1", 2d, 10d, 1d);
+        ItemDAO itemDAO = new ItemDAO();
+        List<Item> itens = itemDAO.buscarPorDescricao("cafe tipo 1");
+        assertNotNull(id_item);
+        Usuario usuario = Login.efetuarLogin("admin", "admin");
+        AdicionarCredito.adicionarCredito(2, usuario);
+        boolean result = ComprarProduto.pagarViaCredito(usuario, itens.get(0));
+        assertTrue(result);
+    }
 
-//    @Test
-//    public void tentarComprarSemSaldo() {
-//        Item itemCafe = new Item(1, "café extra forte", 4d, new Estoque(3, 1));
-//        ItemDAO itemDAO = new ItemDAO();
-//        itemDAO.inserir(itemCafe);
-//        UsuarioMensal usuarioWesley = new UsuarioMensal(2, "wesley", "wesley", "wesley", new Credito(0d));
-//        UsuarioDAO usuarioDAO = new UsuarioDAO();
-//        usuarioDAO.inserir(usuarioWesley);
-//        List<Historico> historicoSistema = new ArrayList<>();
-//        HistoricoDAO historicoDAO = new HistoricoDAO();
-//
-//        ListaVenda vendas = new ListaVenda();
-//        ComprarProduto.pagarViaCredito(usuarioWesley, itemCafe, vendas, historicoSistema);
-//    }
+    @Test
+    public void test12_PagarViaCreditoComprarDuasVezesUmItemQueCustaTodoOSaldoInicial() {
+        Integer id_item = MenuAdmin.cadastrarItem("cafe tipo 2", 2d, 10d, 1d);
+        ItemDAO itemDAO = new ItemDAO();
+        List<Item> itens = itemDAO.buscarPorDescricao("cafe tipo 2");
+        assertNotNull(id_item);
+        Usuario usuario = Login.efetuarLogin("admin", "admin");
+        AdicionarCredito.adicionarCredito(2, usuario);
+        ComprarProduto.pagarViaCredito(usuario, itens.get(0));
+        boolean result = ComprarProduto.pagarViaCredito(usuario, itens.get(0));
+        assertFalse(result);
+    }
 
-//    @Test
-//    public void usuarioComSaldoIgualAoItemComprado() {
-//        Item itemCafe = new Item(1, "café extra forte", 4d, new Estoque(3, 1));
-//        UsuarioMensal usuarioWesley = new UsuarioMensal(2, "wesley", "wesley", "wesley", new Credito(4d));
-//        List<Historico> historicoSistema = new ArrayList<>();
-//        ListaVenda vendas = new ListaVenda();
-//        ComprarProduto.pagarViaCredito(usuarioWesley, itemCafe, vendas, historicoSistema);
-//        MenuAdmin.imprimirHistorico(vendas);
-//    }
+    @Test
+    public void test13_PagarViaCreditoComSaldoDuasVezes() throws Exception {
+        Integer id_item = MenuAdmin.cadastrarItem("cafe tipo 5", 2d, 10d, 1d);
+        ItemDAO itemDAO = new ItemDAO();
+        List<Item> itens = itemDAO.buscarPorDescricao("cafe tipo 5");
+        assertNotNull(id_item);
+        Usuario usuario = Login.efetuarLogin("admin", "admin");
+        AdicionarCredito.adicionarCredito(100, usuario);
+        ComprarProduto.pagarViaCredito(usuario, itens.get(0));
+        boolean result = ComprarProduto.pagarViaCredito(usuario, itens.get(0));
+        assertTrue(result);
+    }
+
+    @Test
+    public void test14_ComprarProduto() throws Exception {
+        MenuAdmin.cadastrarUsuario("usuario_teste_historico", "usuario_teste_historico", "usuario_teste_historico", 1);
+        Integer id_item = MenuAdmin.cadastrarItem("cafe tipo 3", 2d, 10d, 1d);
+        ItemDAO itemDAO = new ItemDAO();
+        List<Item> itens = itemDAO.buscarPorDescricao("cafe tipo 3");
+        Item itemComprado = itens.get(0);
+        assertNotNull(id_item);
+        Usuario usuario = Login.efetuarLogin("usuario_teste_historico", "usuario_teste_historico");
+        AdicionarCredito.adicionarCredito(200, usuario);
+        ComprarProduto.pagarViaCredito(usuario, itemComprado);
+        ComprarProduto.pagarViaCredito(usuario, itemComprado);
+        ComprarProduto.pagarViaCredito(usuario, itemComprado);
+        assertEquals(itemComprado.getEstoque().getEstoqueAtual(), 7);
+        HistoricoDAO historicoDAO = new HistoricoDAO();
+        List<Historico> historicos = historicoDAO.buscarPorUsuario(usuario.getNome());
+        assertEquals(3, historicos.size());
+        assertEquals(usuario.getId(), historicos.get(0).getUsuario().getId());
+        assertEquals(usuario.getId(), historicos.get(1).getUsuario().getId());
+        assertEquals(usuario.getId(), historicos.get(2).getUsuario().getId());
+        assertEquals(itemComprado.getValor(), historicos.get(0).getTotal());
+        assertEquals(itemComprado.getValor(), historicos.get(1).getTotal());
+        assertEquals(itemComprado.getValor(), historicos.get(2).getTotal());
+    }
+
 
 }

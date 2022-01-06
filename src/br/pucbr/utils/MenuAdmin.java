@@ -60,7 +60,7 @@ public class MenuAdmin {
 
                     break;
                 case 5:
-                    AdicionarCredito.adicionarCredito(usuarioLogado);
+                    AdicionarCredito.executar(usuarioLogado);
                     break;
                 case 6:
                     System.out.println("Obrigado por utilizar nosso sistema!");

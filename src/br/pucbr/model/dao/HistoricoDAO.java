@@ -21,16 +21,10 @@ public class HistoricoDAO implements InterfaceDAO {
                 Statement statement = BancoDeDados.conectar().createStatement();
 
                 if (statement != null) {
-                    statement.execute("CREATE TABLE IF NOT EXISTS historico( " +
-                            "id_historico INTEGER NOT NULL UNIQUE" +
-                            ", id_usuario INTEGER NOT NULL" +
-                            ", id_venda INTEGER NOT NULL" +
-                            ", data DATE NOT NULL" +
-                            ", total NUMERIC NOT NULL" +
-                            ", PRIMARY KEY('id_historico' AUTOINCREMENT))");
-
                     PreparedStatement preparedStatement = BancoDeDados.conectar()
-                            .prepareStatement("INSERT INTO historico(id_usuario, id_venda, data, total) VALUES (?,?,?,?)");
+                            .prepareStatement("INSERT " +
+                                    "INTO historico(id_usuario, id_venda, data, total) " +
+                                    "VALUES (?,?,?,?)");
 
                     preparedStatement.setDouble(1, historico.getUsuarioId());
                     preparedStatement.setDouble(2, historico.getVendaId());
@@ -42,7 +36,6 @@ public class HistoricoDAO implements InterfaceDAO {
                     if (genKeys.next()) {
                         historico.setId(genKeys.getInt(1));
                     }
-
                     return historico;
                 }
 
@@ -132,8 +125,7 @@ public class HistoricoDAO implements InterfaceDAO {
 
                 Venda venda = new Venda(rs.getDate("data"), rs.getDouble("total"), item);
                 venda.setId(rs.getInt("id_venda"));
-
-                Historico historico = new Historico(rs.getDate("data"), rs.getDouble("total"), usuario, venda);
+                Historico historico = new Historico(rs.getInt("id_historico"), rs.getDate("data"), rs.getDouble("total"), usuario, venda);
 
                 historicos.add(historico);
             }
